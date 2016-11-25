@@ -1,9 +1,9 @@
 export const Player = Object.freeze({
-	PLAY: 'play',
-	PAUSE: 'pause',
-	STOP: 'stop'
+  PLAY: 'play',
+  PAUSE: 'pause',
+  STOP: 'stop'
 });
 
 export const FileAction = Object.freeze({
-	LOAD_FILE: 'loadFile'
+  LOAD_FILE: 'loadFile'
 });
