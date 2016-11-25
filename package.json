@@ -1,7 +1,7 @@
 {
   "name": "midi-redux",
   "version": "0.1.0",
-  "description": "Reproduce MIDI files using Redux",
+  "description": "Read and play MIDI files using Redux (and React)",
   "main": "webpack.config.js",
   "devDependencies": {
     "axios": "^0.12.0",
