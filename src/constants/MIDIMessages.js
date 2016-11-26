@@ -1,4 +1,4 @@
-export const MIDIMessages = Object.freeze({
+export default Object.freeze({
   SEQUENCE_NUMBER: 'sequenceNumber',
   TEXT: 'text',
   TRACK_NAME: 'trackName',

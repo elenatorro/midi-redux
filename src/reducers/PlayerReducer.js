@@ -7,9 +7,9 @@ const initialState = {
   instruments: null
 };
 
-export default function MIDIPlayerReducer(state=initialState, action) {
+export default function MIDIPlayerReducer(state = initialState, action) {
   switch (action.type) {
-      case Player.PLAY:
+    case Player.PLAY:
       return {
         ...state,
         instruments: action.payload.instruments,
@@ -19,5 +19,5 @@ export default function MIDIPlayerReducer(state=initialState, action) {
       };
     default:
       return state;
-    }
+  }
 }

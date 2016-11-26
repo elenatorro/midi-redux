@@ -1,6 +1,6 @@
 import Soundfont from 'soundfont-player';
 import { MIDIInstruments, SOUNDS_PATH, SOUNDS_FILETYPE, SOUNDS_FILE_EXTENSION } from '../constants/MIDIInstruments';
-import { MIDIMessages } from '../constants/MIDIMessages';
+import MIDIMessages from '../constants/MIDIMessages';
 import { TimeUtils } from '../utils/TimeUtils';
 import { InstrumentUtils } from '../utils/InstrumentUtils';
 
