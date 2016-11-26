@@ -9,151 +9,175 @@ const initialState = {
 
 export default function MIDIEventsReducer(state=initialState, action) {
   switch (action.type) {
-    case MIDIMessages.SEQUENCE_NUMBER:
-      return Object.assign({}, state, {
+      case MIDIMessages.SEQUENCE_NUMBER:
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.TEXT:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.TRACK_NAME:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.PROGRAM_CHANGE:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         instruments: action.payload.instruments,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.INSTRUMENT_NAME:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.LYRICS:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.MARKER:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.CUE_POINT:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.MIDI_CHANNEL_PREFIX:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.END_OF_TRACK:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.SET_TEMPO:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.SMPTE_OFFSET:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.TIME_SIGNATURE:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.KEY_SIGNATURE:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.SEQUENCER_SPECIFIC:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.SYS_EX:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.DIVIDED_SYS_EX:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.LAST:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.NOTE_OFF:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.NOTE_ON:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.NOTE_AFTER_TOUCH:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.CHANNEL_AFTER_TOUCH:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.PITCH_BEND:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     case MIDIMessages.UNKNOWN:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
-      });
+      };
     default:
       return state;
   }

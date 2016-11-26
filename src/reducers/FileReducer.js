@@ -6,10 +6,11 @@ const initialState = {
 
 export default function MIDIFileReducer(state=initialState, action) {
   switch (action.type) {
-    case FileAction.LOAD_FILE:
-      return Object.assign({}, state, {
+      case FileAction.LOAD_FILE:
+      return {
+        ...state,
         song: action.payload.song
-      });
+      };
     default:
       return state;
     }
