@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux';
 
-import MIDIReducer from '../reducers/MIDIReducer';
-import PlayerReducer from '../reducers/PlayerReducer';
-import FileReducer from '../reducers/FileReducer';
+import midi from '../reducers/MIDIReducer';
+import player from '../reducers/PlayerReducer';
+import file from '../reducers/FileReducer';
 
 const rootReducer = combineReducers({
-  midi:   MIDIReducer,
-  player: PlayerReducer,
-  file:   FileReducer
+  midi,
+  player,
+  file
 });
 
 export default rootReducer;
