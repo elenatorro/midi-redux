@@ -1,19 +1,15 @@
-import Soundfont from 'soundfont-player';
-import { MIDIInstruments, SOUNDS_PATH, SOUNDS_FILETYPE, SOUNDS_FILE_EXTENSION } from '../constants/MIDIInstruments';
 import MIDIMessages from '../constants/MIDIMessages';
 import { TimeUtils } from '../utils/TimeUtils';
 import { InstrumentUtils } from '../utils/InstrumentUtils';
 
 function programChange(trackIndex, midiMessage) {
   return (dispatch, getState) => {
-    var state, instruments, type, payload, tracks, deltaTime;
+    var state, type, payload, tracks, deltaTime;
 
-    state = getState();
-    instruments = state.player.instruments;
-    instruments[trackIndex] = MIDIInstruments[midiMessage.programNumber];
-    type = MIDIMessages.PROGRAM_CHANGE;
-    tracks = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
-    payload = { instruments, tracks, trackIndex, midiMessage };
+    state     = getState();
+    type      = MIDIMessages.PROGRAM_CHANGE;
+    tracks    = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
+    payload   = { tracks, trackIndex, midiMessage };
     deltaTime = _getDeltaSeconds.call(this, tracks, trackIndex, state);
 
     setTimeout(() => dispatch({ type, payload }), deltaTime);
@@ -22,30 +18,27 @@ function programChange(trackIndex, midiMessage) {
 
 function noteOn(trackIndex, midiMessage) {
   return (dispatch, getState) => {
-    var state, deltaTime, type, payload, tracks, instrument, instrumentPath;
+    var state, instruments, instrument, deltaTime, type, payload, tracks;
 
-    state = getState();
-    type = MIDIMessages.NOTE_ON;
-    tracks = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
-    payload = { tracks, trackIndex, midiMessage };
-    deltaTime = _getDeltaSeconds.call(this, tracks, trackIndex, state);
-    instrument = state.player.instruments[trackIndex];
-    instrumentPath = `${SOUNDS_PATH}/${instrument}-${SOUNDS_FILETYPE}.${SOUNDS_FILE_EXTENSION}`;
+    state      = getState();
+    type       = MIDIMessages.NOTE_ON;
+    tracks     = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
+    payload    = { tracks, trackIndex, midiMessage };
+    deltaTime  = _getDeltaSeconds.call(this, tracks, trackIndex, state);
+    instruments = state.player.instruments;
+    instrument = instruments[trackIndex];
 
-    Soundfont.instrument(state.midi.audioContext, instrumentPath)
-      .then((instrument) => {
-        setTimeout(() => {
-          dispatch({ type, payload });
+      setTimeout(() => {
+        dispatch({ type, payload });
 
-          InstrumentUtils.play(
-            midiMessage.noteNumber,
-            midiMessage.velocity,
-            instrument,
-            state.midi.audioContext.currentTime,
-            state.midi.tempo
-          );
-        }, deltaTime);
-      });
+        InstrumentUtils.play(
+          midiMessage.noteNumber,
+          midiMessage.velocity,
+          instrument,
+          state.midi.audioContext.currentTime,
+          state.midi.tempo
+        );
+      }, deltaTime);
   };
 }
 
@@ -324,13 +317,15 @@ function last(trackIndex, midiMessage) {
 function noteOff(trackIndex, midiMessage) {
   return (dispatch, getState) => {
 
-    var state, type, payload, tracks, deltaTime;
+    var state, type, payload, tracks, deltaTime, instrument, instruments;
 
     state = getState();
     type = MIDIMessages.NOTE_OFF;
-    tracks = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
-    payload = { tracks, trackIndex, midiMessage };
-    deltaTime = _getDeltaSeconds.call(this, tracks, trackIndex, state);
+    tracks     = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
+    payload    = { tracks, trackIndex, midiMessage };
+    deltaTime  = _getDeltaSeconds.call(this, tracks, trackIndex, state);
+    instruments = state.player.instruments;
+    instrument = instruments[trackIndex];
 
     setTimeout(() => {
       dispatch({ type, payload });
@@ -454,6 +449,7 @@ export const MIDIActions = {
 function _getDeltaSeconds(tracks, trackIndex, state) {
   return TimeUtils.getDeltaSeconds(
     tracks[trackIndex].currentDeltaTime,
+    state.player.ticksPerBeat,
     state.midi.tempo
   );
 }

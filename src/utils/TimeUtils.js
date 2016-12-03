@@ -1,11 +1,21 @@
+const
+  MINUTES_TO_SECONDS = 60,
+  SECONDS_TO_MILLISECONDS = 1000
+;
+
 export const TimeUtils = {
-  /*Tempo*/
+  /*Tempo = number of ticks per minute */
   getBMP(microsecondsPerBeat, ticksPerBeat) {
     return microsecondsPerBeat / ticksPerBeat;
   },
 
-  getDeltaSeconds(currentDeltaTime, tempo) {
-    return currentDeltaTime * (60.0 / tempo); // FIXME: 1000 x 60 = q4/4
+  getDeltaSeconds(currentDeltaTime, ticksPerBeat, tempo) {
+    var secondsPerBeat, secondsPerTick, timeInSeconds;
+
+    secondsPerBeat = tempo / MINUTES_TO_SECONDS * SECONDS_TO_MILLISECONDS;
+    secondsPerTick = secondsPerBeat / ticksPerBeat;
+    timeInSeconds = currentDeltaTime * secondsPerTick;
+    return timeInSeconds;
   },
 
   getGain(tempo, velocity) {

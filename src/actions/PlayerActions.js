@@ -1,26 +1,74 @@
 import { Player } from '../constants/general';
 import { MIDIActions } from '../actions/MIDIActions';
+import  MIDIMessages from '../constants/MIDIMessages';
+import { MIDIInstruments, SOUNDS_PATH, SOUNDS_FILETYPE, SOUNDS_FILE_EXTENSION } from '../constants/MIDIInstruments';
+
+import Soundfont from 'soundfont-player';
 
 function play() {
   return (dispatch, getState) => {
-    var state, tracks, instruments, ticksPerBeat, songTracks, i, midiMessage;
+    var state, tracks, ticksPerBeat, songTracks, i, midiMessage;
 
     state = getState();
     tracks = _initTracks.call(this, state.file.song);
-    instruments = new Array(tracks.length);
     songTracks = state.file.song.tracks;
     ticksPerBeat = state.file.song.header.ticksPerBeat;
 
-    dispatch({ type: Player.PLAY, payload: { tracks, instruments, ticksPerBeat } });
+    dispatch({ type: Player.PLAY, payload: { tracks, ticksPerBeat } });
+    dispatch(loadInstruments())
+      .then(() => {
+        tracks.forEach((track, trackIndex) => {
+          for (i = track.currentMessageIndex; i < songTracks[trackIndex].length; i++) {
+            midiMessage = songTracks[trackIndex][i];
+            if (MIDIActions[midiMessage.subtype]) {
+              dispatch(MIDIActions[midiMessage.subtype](trackIndex, midiMessage));
+            }
+          }
+        });
+      });
+  };
+}
+
+function loadInstruments() {
+  return (dispatch, getState) => {
+    var state, tracks, instruments, songTracks, i, midiMessage, loadInstrumentPromises;
+
+    state      = getState();
+    songTracks = state.file.song.tracks;
+    tracks     = state.player.tracks;
+    loadInstrumentPromises = [];
+
+    instruments = new Array(tracks.length);
+
+    dispatch({ type: Player.LOAD_INSTRUMENTS, payload: {instruments} });
 
     tracks.forEach((track, trackIndex) => {
       for (i = track.currentMessageIndex; i < songTracks[trackIndex].length; i++) {
         midiMessage = songTracks[trackIndex][i];
-        if (MIDIActions[midiMessage.subtype]) {
-          dispatch(MIDIActions[midiMessage.subtype](trackIndex, midiMessage));
+        if (midiMessage.subtype === MIDIMessages.PROGRAM_CHANGE) {
+          loadInstrumentPromises.push(dispatch(loadInstrument(trackIndex, midiMessage)));
         }
       }
     });
+
+    return Promise.all(loadInstrumentPromises);
+  };
+}
+
+function loadInstrument(trackIndex, midiMessage) {
+  return (dispatch, getState) => {
+    var state, instruments, instrumentName, instrumentPath;
+
+    state = getState();
+    instruments = state.player.instruments;
+    instrumentName = MIDIInstruments[midiMessage.programNumber];
+    instrumentPath = `${SOUNDS_PATH}/${instrumentName}-${SOUNDS_FILETYPE}.${SOUNDS_FILE_EXTENSION}`;
+
+    return Soundfont.instrument(state.midi.audioContext, instrumentPath)
+      .then((instrument) => {
+        instruments[trackIndex] = instrument;
+        dispatch({type: Player.LOAD_INSTRUMENT, payload: {instruments}});
+      });
   };
 }
 
