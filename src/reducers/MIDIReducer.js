@@ -10,13 +10,6 @@ const initialState = {
 export default function MIDIEventsReducer(state = initialState, action) {
   switch (action.type) {
     case MIDIMessages.PROGRAM_CHANGE:
-      return {
-        ...state,
-        tracks: action.payload.tracks,
-        trackIndex: action.payload.trackIndex,
-        midiMessage: action.payload.midiMessage,
-        instruments: action.payload.instruments
-      };
     case MIDIMessages.SEQUENCE_NUMBER:
     case MIDIMessages.TEXT:
     case MIDIMessages.TRACK_NAME:
