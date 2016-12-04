@@ -26,9 +26,22 @@ class Layout extends Component {
 
   render() {
     return (
-			<div>
-        <button onClick={this.player.play}>Play Song</button>
-        <input type="file" onChange={this.files.readMidiFile}/>
+      <div class="section no-pad-bot" id="index-banner">
+        <div class="container">
+          <h1 class="header center purple-text">MIDI Redux</h1>
+          <div class="row mg-button-group">
+            <div class="file-field input-field">
+              <div class="btn-large waves-effect waves-light purple darken-2">
+                <span>Select MIDI file</span>
+                <input type="file" onChange={this.files.readMidiFile}/>
+              </div>
+              <div class="file-path-wrapper">
+                <input class="file-path validate" type="text"/>
+              </div>
+            </div>
+            <button class="btn-large waves-effect waves-light purple darken-2" onClick={this.player.play}>Play Song</button>
+          </div>
+        </div>
       </div>
     );
   }

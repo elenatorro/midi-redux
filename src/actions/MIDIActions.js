@@ -6,10 +6,10 @@ function programChange(trackIndex, midiMessage) {
   return (dispatch, getState) => {
     var state, type, payload, tracks, deltaTime;
 
-    state     = getState();
-    type      = MIDIMessages.PROGRAM_CHANGE;
-    tracks    = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
-    payload   = { tracks, trackIndex, midiMessage };
+    state = getState();
+    type = MIDIMessages.PROGRAM_CHANGE;
+    tracks = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
+    payload = { tracks, trackIndex, midiMessage };
     deltaTime = _getDeltaSeconds.call(this, tracks, trackIndex, state);
 
     setTimeout(() => dispatch({ type, payload }), deltaTime);
@@ -20,25 +20,25 @@ function noteOn(trackIndex, midiMessage) {
   return (dispatch, getState) => {
     var state, instruments, instrument, deltaTime, type, payload, tracks;
 
-    state      = getState();
-    type       = MIDIMessages.NOTE_ON;
-    tracks     = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
-    payload    = { tracks, trackIndex, midiMessage };
-    deltaTime  = _getDeltaSeconds.call(this, tracks, trackIndex, state);
+    state = getState();
+    type = MIDIMessages.NOTE_ON;
+    tracks = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
+    payload = { tracks, trackIndex, midiMessage };
+    deltaTime = _getDeltaSeconds.call(this, tracks, trackIndex, state);
     instruments = state.player.instruments;
     instrument = instruments[trackIndex];
 
-      setTimeout(() => {
-        dispatch({ type, payload });
+    setTimeout(() => {
+      dispatch({ type, payload });
 
-        InstrumentUtils.play(
-          midiMessage.noteNumber,
-          midiMessage.velocity,
-          instrument,
-          state.midi.audioContext.currentTime,
-          state.midi.tempo
-        );
-      }, deltaTime);
+      InstrumentUtils.play(
+        midiMessage.noteNumber,
+        midiMessage.velocity,
+        instrument,
+        state.midi.audioContext.currentTime,
+        state.midi.tempo
+      );
+    }, deltaTime);
   };
 }
 
@@ -215,12 +215,13 @@ function smpteOffset(trackIndex, midiMessage) {
 function timeSignature(trackIndex, midiMessage) {
   return (dispatch, getState) => {
 
-    var state, type, payload, tracks, deltaTime;
+    var state, type, payload, tracks, deltaTime, signature;
 
     state = getState();
     type = MIDIMessages.TIME_SIGNATURE;
     tracks = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
-    payload = { tracks, trackIndex, midiMessage };
+    signature = midiMessage.metronome / midiMessage.thirtyseconds;
+    payload = { tracks, trackIndex, midiMessage, signature };
     deltaTime = _getDeltaSeconds.call(this, tracks, trackIndex, state);
 
     setTimeout(() => {
@@ -321,30 +322,14 @@ function noteOff(trackIndex, midiMessage) {
 
     state = getState();
     type = MIDIMessages.NOTE_OFF;
-    tracks     = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
-    payload    = { tracks, trackIndex, midiMessage };
-    deltaTime  = _getDeltaSeconds.call(this, tracks, trackIndex, state);
+    tracks = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
+    payload = { tracks, trackIndex, midiMessage };
+    deltaTime = _getDeltaSeconds.call(this, tracks, trackIndex, state);
     instruments = state.player.instruments;
     instrument = instruments[trackIndex];
 
     setTimeout(() => {
-      dispatch({ type, payload });
-    }, deltaTime);
-  };
-}
-
-function noteAftertouch(trackIndex, midiMessage) {
-  return (dispatch, getState) => {
-
-    var state, type, payload, tracks, deltaTime;
-
-    state = getState();
-    type = MIDIMessages.NOTE_AFTER_TOUCH;
-    tracks = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
-    payload = { tracks, trackIndex, midiMessage };
-    deltaTime = _getDeltaSeconds.call(this, tracks, trackIndex, state);
-
-    setTimeout(() => {
+      instrument.stop();
       dispatch({ type, payload });
     }, deltaTime);
   };
@@ -450,7 +435,8 @@ function _getDeltaSeconds(tracks, trackIndex, state) {
   return TimeUtils.getDeltaSeconds(
     tracks[trackIndex].currentDeltaTime,
     state.player.ticksPerBeat,
-    state.midi.tempo
+    state.midi.tempo,
+    state.midi.signature
   );
 }
 

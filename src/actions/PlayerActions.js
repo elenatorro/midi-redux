@@ -1,6 +1,6 @@
 import { Player } from '../constants/general';
 import { MIDIActions } from '../actions/MIDIActions';
-import  MIDIMessages from '../constants/MIDIMessages';
+import MIDIMessages from '../constants/MIDIMessages';
 import { MIDIInstruments, SOUNDS_PATH, SOUNDS_FILETYPE, SOUNDS_FILE_EXTENSION } from '../constants/MIDIInstruments';
 
 import Soundfont from 'soundfont-player';
@@ -33,14 +33,14 @@ function loadInstruments() {
   return (dispatch, getState) => {
     var state, tracks, instruments, songTracks, i, midiMessage, loadInstrumentPromises;
 
-    state      = getState();
+    state = getState();
     songTracks = state.file.song.tracks;
-    tracks     = state.player.tracks;
+    tracks = state.player.tracks;
     loadInstrumentPromises = [];
 
     instruments = new Array(tracks.length);
 
-    dispatch({ type: Player.LOAD_INSTRUMENTS, payload: {instruments} });
+    dispatch({ type: Player.LOAD_INSTRUMENTS, payload: { instruments } });
 
     tracks.forEach((track, trackIndex) => {
       for (i = track.currentMessageIndex; i < songTracks[trackIndex].length; i++) {
@@ -67,7 +67,10 @@ function loadInstrument(trackIndex, midiMessage) {
     return Soundfont.instrument(state.midi.audioContext, instrumentPath)
       .then((instrument) => {
         instruments[trackIndex] = instrument;
-        dispatch({type: Player.LOAD_INSTRUMENT, payload: {instruments}});
+        dispatch({ type: Player.LOAD_INSTRUMENT, payload: { instruments } });
+      })
+      .catch((reason) => {
+        console.error({reason});
       });
   };
 }
