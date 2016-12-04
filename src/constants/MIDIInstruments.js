@@ -1,7 +1,11 @@
 // Soundfond Library: https://github.com/gleitz/midi-js-soundfonts/tree/gh-pages/FluidR3_GM
 import { InstrumentPathConfig } from '../config/instruments-path';
 
-export const SOUNDS_PATH = `http://${InstrumentPathConfig.URL}:${InstrumentPathConfig.PORT}/${InstrumentPathConfig.SET}`;
+// Local
+// export const SOUNDS_PATH = `http://${InstrumentPathConfig.URL}:${InstrumentPathConfig.PORT}/${InstrumentPathConfig.SET}`;
+// External
+export const SOUNDS_PATH = `${InstrumentPathConfig.URL_GITHUB}/${InstrumentPathConfig.SET}`;
+
 export const SOUNDS_FILETYPE = 'mp3';
 export const SOUNDS_FILE_EXTENSION = 'js';
 export const DEFAULT_TEMPO_BPM = 120;
