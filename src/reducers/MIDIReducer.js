@@ -21,6 +21,13 @@ export default function MIDIEventsReducer(state = initialState, action) {
     case MIDIMessages.MIDI_CHANNEL_PREFIX:
     case MIDIMessages.END_OF_TRACK:
     case MIDIMessages.SET_TEMPO:
+      return {
+        ...state,
+        tracks: action.payload.tracks,
+        trackIndex: action.payload.trackIndex,
+        midiMessage: action.payload.midiMessage,
+        tempo: action.payload.tempo
+      }
     case MIDIMessages.SMPTE_OFFSET:
     case MIDIMessages.KEY_SIGNATURE:
     case MIDIMessages.SEQUENCER_SPECIFIC:
