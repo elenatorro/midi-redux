@@ -1,10 +1,11 @@
 import MIDIMessages from '../constants/MIDIMessages';
-import { DEFAULT_TEMPO_BPM } from '../constants/MIDIInstruments';
+import { DEFAULT_TEMPO_BPM, DEFAULT_SIGNATURE } from '../constants/MIDIInstruments';
 
 const initialState = {
   audioContext: new AudioContext(),
   currentDelta: 0,
-  tempo: DEFAULT_TEMPO_BPM
+  tempo: DEFAULT_TEMPO_BPM,
+  signature: DEFAULT_SIGNATURE
 };
 
 export default function MIDIEventsReducer(state = initialState, action) {
@@ -21,7 +22,6 @@ export default function MIDIEventsReducer(state = initialState, action) {
     case MIDIMessages.END_OF_TRACK:
     case MIDIMessages.SET_TEMPO:
     case MIDIMessages.SMPTE_OFFSET:
-    case MIDIMessages.TIME_SIGNATURE:
     case MIDIMessages.KEY_SIGNATURE:
     case MIDIMessages.SEQUENCER_SPECIFIC:
     case MIDIMessages.SYS_EX:
@@ -39,6 +39,14 @@ export default function MIDIEventsReducer(state = initialState, action) {
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
       };
+    case MIDIMessages.TIME_SIGNATURE:
+      return {
+        ...state,
+        tracks: action.payload.tracks,
+        trackIndex: action.payload.trackIndex,
+        midiMessage: action.payload.midiMessage,
+        signature: action.payload.signature
+      }
     default:
       return state;
   }

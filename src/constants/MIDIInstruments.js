@@ -1,9 +1,11 @@
 // Soundfond Library: https://github.com/gleitz/midi-js-soundfonts/tree/gh-pages/FluidR3_GM
+import { InstrumentPathConfig } from '../config/instruments-path';
 
-export const SOUNDS_PATH = 'https://raw.githubusercontent.com/gleitz/midi-js-soundfonts/gh-pages/MusyngKite';
+export const SOUNDS_PATH = `http://${InstrumentPathConfig.URL}:${InstrumentPathConfig.PORT}/${InstrumentPathConfig.SET}`;
 export const SOUNDS_FILETYPE = 'mp3';
 export const SOUNDS_FILE_EXTENSION = 'js';
 export const DEFAULT_TEMPO_BPM = 120;
+export const DEFAULT_SIGNATURE = 4;
 
 export const MIDIInstruments = {
   0: 'acoustic_grand_piano',
