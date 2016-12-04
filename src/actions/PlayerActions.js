@@ -68,6 +68,9 @@ function loadInstrument(trackIndex, midiMessage) {
       .then((instrument) => {
         instruments[trackIndex] = instrument;
         dispatch({ type: Player.LOAD_INSTRUMENT, payload: { instruments } });
+      })
+      .catch((reason) => {
+        console.error({reason});
       });
   };
 }
