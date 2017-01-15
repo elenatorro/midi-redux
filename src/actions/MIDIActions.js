@@ -2,6 +2,8 @@ import MIDIMessages from '../constants/MIDIMessages';
 import { TimeUtils } from '../utils/TimeUtils';
 import { InstrumentUtils } from '../utils/InstrumentUtils';
 
+const MAX_BYTES = 127;
+
 function programChange(trackIndex, midiMessage) {
   return (dispatch, getState) => {
     var state, type, payload, tracks, deltaTime;
@@ -18,7 +20,7 @@ function programChange(trackIndex, midiMessage) {
 
 function noteOn(trackIndex, midiMessage) {
   return (dispatch, getState) => {
-    var state, instruments, instrument, deltaTime, type, payload, tracks;
+    var state, instruments, instrument, deltaTime, type, payload, tracks, volume;
 
     state = getState();
     type = MIDIMessages.NOTE_ON;
@@ -27,17 +29,18 @@ function noteOn(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, tracks, trackIndex, state);
     instruments = state.player.instruments;
     instrument = instruments[trackIndex];
+    volume = state.midi.volumes ? state.midi.volumes[trackIndex] : MAX_BYTES
 
     setTimeout(() => {
       dispatch({ type, payload });
 
       InstrumentUtils.play(
         midiMessage.noteNumber,
-        midiMessage.velocity,
         instrument,
         state.midi.audioContext.currentTime,
-        state.midi.tempo
+        volume
       );
+
     }, deltaTime);
   };
 }

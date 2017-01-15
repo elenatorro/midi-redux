@@ -1,6 +1,7 @@
 const
   MINUTES_TO_SECONDS = 60,
-  SECONDS_TO_MILLISECONDS = 1000;
+  SECONDS_TO_MILLISECONDS = 1000,
+  VOLUME_BITS = 127;
 
 export const TimeUtils = {
   /* Tempo = number of ticks per minute */
@@ -18,9 +19,9 @@ export const TimeUtils = {
     return timeInSeconds / signature;
   },
 
-  getGain(tempo, velocity) {
+  getGain(volume) {
     return {
-      gain: velocity / tempo
+      gain: volume / VOLUME_BITS
     };
   }
 };

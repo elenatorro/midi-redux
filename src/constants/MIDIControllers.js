@@ -1,0 +1,15 @@
+export const MIDIControllerTypes = {
+  MODULATION_WHEEL: 1,
+  VOLUME: 7,
+  PAN: 10,
+  EXPRESSION: 11,
+  SUSTAIN_PEDAL: 64,
+  REGISTERED_LSB: 100,
+  REGISTERED_MSB: 101,
+  ALL_CONTROLLERS_OFF: 121,
+  ALL_NOTES_OFF: 123
+};
+
+export const MIDIControllerChannels = {
+  PERCUSSION: 10
+};

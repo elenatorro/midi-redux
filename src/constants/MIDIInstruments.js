@@ -2,9 +2,9 @@
 import { InstrumentPathConfig } from '../config/instruments-path';
 
 // Local
-// export const SOUNDS_PATH = `http://${InstrumentPathConfig.URL}:${InstrumentPathConfig.PORT}/${InstrumentPathConfig.SET}`;
+export const SOUNDS_PATH = `${InstrumentPathConfig.URL}:${InstrumentPathConfig.PORT}/${InstrumentPathConfig.SET}`;
 // External
-export const SOUNDS_PATH = `${InstrumentPathConfig.URL_GITHUB}/${InstrumentPathConfig.SET}`;
+// export const SOUNDS_PATH = `${InstrumentPathConfig.URL_GITHUB}/${InstrumentPathConfig.SET}`;
 
 export const SOUNDS_FILETYPE = 'mp3';
 export const SOUNDS_FILE_EXTENSION = 'js';
