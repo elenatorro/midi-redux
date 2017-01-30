@@ -10,6 +10,22 @@ const initialState = {
 
 export default function MIDIEventsReducer(state = initialState, action) {
   switch (action.type) {
+    case MIDIMessages.TIME_SIGNATURE:
+      return {
+        ...state,
+        tracks: action.payload.tracks,
+        trackIndex: action.payload.trackIndex,
+        midiMessage: action.payload.midiMessage,
+        signature: action.payload.signature
+      };
+    case MIDIMessages.SET_TEMPO:
+      return {
+        ...state,
+        tracks: action.payload.tracks,
+        trackIndex: action.payload.trackIndex,
+        midiMessage: action.payload.midiMessage,
+        tempo: action.payload.tempo
+      };
     case MIDIMessages.PROGRAM_CHANGE:
     case MIDIMessages.SEQUENCE_NUMBER:
     case MIDIMessages.TEXT:
@@ -20,14 +36,6 @@ export default function MIDIEventsReducer(state = initialState, action) {
     case MIDIMessages.CUE_POINT:
     case MIDIMessages.MIDI_CHANNEL_PREFIX:
     case MIDIMessages.END_OF_TRACK:
-    case MIDIMessages.SET_TEMPO:
-      return {
-        ...state,
-        tracks: action.payload.tracks,
-        trackIndex: action.payload.trackIndex,
-        midiMessage: action.payload.midiMessage,
-        tempo: action.payload.tempo
-      }
     case MIDIMessages.SMPTE_OFFSET:
     case MIDIMessages.KEY_SIGNATURE:
     case MIDIMessages.SEQUENCER_SPECIFIC:
@@ -46,14 +54,6 @@ export default function MIDIEventsReducer(state = initialState, action) {
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage
       };
-    case MIDIMessages.TIME_SIGNATURE:
-      return {
-        ...state,
-        tracks: action.payload.tracks,
-        trackIndex: action.payload.trackIndex,
-        midiMessage: action.payload.midiMessage,
-        signature: action.payload.signature
-      }
     default:
       return state;
   }

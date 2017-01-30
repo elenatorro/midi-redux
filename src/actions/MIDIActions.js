@@ -1,8 +1,12 @@
 import MIDIMessages from '../constants/MIDIMessages';
 import { TimeUtils } from '../utils/TimeUtils';
 import { InstrumentUtils } from '../utils/InstrumentUtils';
+import { MIDIControllerTypes } from '../constants/MIDIControllers';
 
-const MAX_BYTES = 127;
+const
+  MAX_BYTES = 127,
+  DELAY     = 500
+;
 
 function programChange(trackIndex, midiMessage) {
   return (dispatch, getState) => {
@@ -29,7 +33,7 @@ function noteOn(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, tracks, trackIndex, state);
     instruments = state.player.instruments;
     instrument = instruments[trackIndex];
-    volume = state.midi.volumes ? state.midi.volumes[trackIndex] : MAX_BYTES
+    volume = state.midi.volumes ? state.midi.volumes[trackIndex] : MAX_BYTES;
 
     setTimeout(() => {
       dispatch({ type, payload });
@@ -332,9 +336,12 @@ function noteOff(trackIndex, midiMessage) {
     instrument = instruments[trackIndex];
 
     setTimeout(() => {
-      instrument.stop();
+      if (instrument) {
+        instrument.stop();
+      }
+
       dispatch({ type, payload });
-    }, deltaTime);
+    }, deltaTime + DELAY);
   };
 }
 
@@ -389,6 +396,33 @@ function pitchBend(trackIndex, midiMessage) {
   };
 }
 
+function controller(trackIndex, midiMessage) {
+  return (dispatch, getState) => {
+    var state, type, payload, tracks, deltaTime, volumes;
+
+    state = getState();
+    type = MIDIMessages.CONTROLLER;
+    tracks = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
+    volumes = state.midi.volumes || new Array(tracks.length);
+
+    if (midiMessage.controllerType === MIDIControllerTypes.VOLUME) {
+      volumes[trackIndex] = midiMessage.value;
+      payload = { tracks, trackIndex, midiMessage, volumes };
+
+    } else if (midiMessage.controllerType === MIDIControllerTypes.VOLUME) {
+
+    }
+
+    deltaTime = (midiMessage.deltaTime !== 0) ?
+      _getDeltaSeconds.call(this, tracks, trackIndex, state) :
+      midiMessage.deltaTime;
+
+    setTimeout(() => {
+      dispatch({ type, payload });
+    }, deltaTime);
+  };
+}
+
 function unknown(trackIndex, midiMessage) {
   return (dispatch, getState) => {
 
@@ -429,6 +463,7 @@ export const MIDIActions = {
   noteAftertouch,
   channelAftertouch,
   pitchBend,
+  controller,
   unknown
 };
 
