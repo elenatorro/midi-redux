@@ -8,7 +8,7 @@ export const SOUNDS_PATH = `${InstrumentPathConfig.URL}:${InstrumentPathConfig.P
 
 export const SOUNDS_FILETYPE = 'mp3';
 export const SOUNDS_FILE_EXTENSION = 'js';
-export const DEFAULT_TEMPO_BPM = 120;
+export const DEFAULT_TEMPO_BPM = 90;
 export const DEFAULT_SIGNATURE = 4;
 
 export const MIDIInstruments = {

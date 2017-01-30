@@ -193,6 +193,9 @@ function setTempo(trackIndex, midiMessage) {
     type = MIDIMessages.SET_TEMPO;
     tracks = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
     tempo = TimeUtils.getBMP(midiMessage.microsecondsPerBeat, state.player.ticksPerBeat);
+
+    console.log('TEMPO', {tempo});
+
     payload = { tracks, trackIndex, midiMessage, tempo };
     deltaTime = _getDeltaSeconds.call(this, tracks, trackIndex, state);
 
@@ -228,6 +231,7 @@ function timeSignature(trackIndex, midiMessage) {
     type = MIDIMessages.TIME_SIGNATURE;
     tracks = _incrementTrackInfo.call(this, state.player.tracks, trackIndex, midiMessage);
     signature = midiMessage.metronome / midiMessage.thirtyseconds;
+    console.log('signature', {signature});
     payload = { tracks, trackIndex, midiMessage, signature };
     deltaTime = _getDeltaSeconds.call(this, tracks, trackIndex, state);
 

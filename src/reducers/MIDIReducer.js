@@ -10,14 +10,6 @@ const initialState = {
 
 export default function MIDIEventsReducer(state = initialState, action) {
   switch (action.type) {
-    case MIDIMessages.TIME_SIGNATURE:
-      return {
-        ...state,
-        tracks: action.payload.tracks,
-        trackIndex: action.payload.trackIndex,
-        midiMessage: action.payload.midiMessage,
-        signature: action.payload.signature
-      };
     case MIDIMessages.SET_TEMPO:
       return {
         ...state,
@@ -25,6 +17,14 @@ export default function MIDIEventsReducer(state = initialState, action) {
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage,
         tempo: action.payload.tempo
+      };
+    case MIDIMessages.TIME_SIGNATURE:
+      return {
+        ...state,
+        tracks: action.payload.tracks,
+        trackIndex: action.payload.trackIndex,
+        midiMessage: action.payload.midiMessage,
+        signature: action.payload.signature
       };
     case MIDIMessages.PROGRAM_CHANGE:
     case MIDIMessages.SEQUENCE_NUMBER:

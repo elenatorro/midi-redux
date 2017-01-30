@@ -9,12 +9,12 @@ export const TimeUtils = {
     return microsecondsPerBeat / ticksPerBeat;
   },
 
-  getDeltaSeconds(currentDeltaTime, ticksPerBeat, tempo, signature) {
+  getDeltaSeconds(currentDeltaTime, ticksPerBeat, tempo, signature) {    
     var secondsPerBeat, secondsPerTick, timeInSeconds;
 
     secondsPerBeat = tempo / MINUTES_TO_SECONDS * SECONDS_TO_MILLISECONDS;
     secondsPerTick = secondsPerBeat / ticksPerBeat;
-    timeInSeconds = currentDeltaTime * secondsPerTick;
+    timeInSeconds  = currentDeltaTime * secondsPerTick;
 
     return timeInSeconds / signature;
   },
