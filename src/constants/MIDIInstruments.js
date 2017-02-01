@@ -3,13 +3,14 @@ import { InstrumentPathConfig } from '../config/instruments-path';
 
 // Local
 export const SOUNDS_PATH = `${InstrumentPathConfig.URL}:${InstrumentPathConfig.PORT}/${InstrumentPathConfig.SET}`;
+
 // External
 // export const SOUNDS_PATH = `${InstrumentPathConfig.URL_GITHUB}/${InstrumentPathConfig.SET}`;
 
 export const SOUNDS_FILETYPE = 'mp3';
 export const SOUNDS_FILE_EXTENSION = 'js';
-export const DEFAULT_TEMPO_BPM = 90;
-export const DEFAULT_SIGNATURE = 4;
+export const DEFAULT_TEMPO_BPM = null;
+export const DEFAULT_SIGNATURE = null;
 
 export const MIDIInstruments = {
   0: 'acoustic_grand_piano',

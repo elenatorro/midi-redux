@@ -1,4 +1,4 @@
-import MIDIMessages from '../constants/MIDIMessages';
+import { MIDIMessages } from '../constants/MIDIMessages';
 import { DEFAULT_TEMPO_BPM, DEFAULT_SIGNATURE } from '../constants/MIDIInstruments';
 
 const initialState = {

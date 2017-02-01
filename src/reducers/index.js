@@ -5,9 +5,9 @@ import player from '../reducers/PlayerReducer';
 import file from '../reducers/FileReducer';
 
 const rootReducer = combineReducers({
-  midi,
   player,
-  file
+  file,
+  midi
 });
 
 export default rootReducer;

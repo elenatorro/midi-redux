@@ -1,13 +1,13 @@
 import { Player } from '../constants/general';
 import { MIDIActions } from '../actions/MIDIActions';
-import MIDIMessages from '../constants/MIDIMessages';
+import { MIDIMessages } from '../constants/MIDIMessages';
 import { MIDIInstruments, SOUNDS_PATH, SOUNDS_FILETYPE, SOUNDS_FILE_EXTENSION } from '../constants/MIDIInstruments';
 
 import Soundfont from 'soundfont-player';
 
 function play() {
   return (dispatch, getState) => {
-    var state, tracks, ticksPerBeat, songTracks, i, midiMessage;
+    let state, tracks, ticksPerBeat, songTracks;
 
     state = getState();
     tracks = _initTracks.call(this, state.file.song);
@@ -15,16 +15,10 @@ function play() {
     ticksPerBeat = state.file.song.header.ticksPerBeat;
 
     dispatch({ type: Player.PLAY, payload: { tracks, ticksPerBeat } });
+
     dispatch(loadInstruments())
       .then(() => {
-        tracks.forEach((track, trackIndex) => {
-          for (i = track.currentMessageIndex; i < songTracks[trackIndex].length; i++) {
-            midiMessage = songTracks[trackIndex][i];
-            if (MIDIActions[midiMessage.subtype]) {
-              dispatch(MIDIActions[midiMessage.subtype](trackIndex, midiMessage));
-            }
-          }
-        });
+        _dispatchAllMIDIActions.call(this, tracks, songTracks, dispatch);
       });
   };
 }
@@ -47,6 +41,8 @@ function loadInstruments() {
         midiMessage = songTracks[trackIndex][i];
         if (midiMessage.subtype === MIDIMessages.PROGRAM_CHANGE) {
           loadInstrumentPromises.push(dispatch(loadInstrument(trackIndex, midiMessage)));
+        } else if (!state.midi.tempo && midiMessage.subtype === MIDIMessages.SET_TEMPO && midiMessage.deltaTime === 0) {
+          dispatch(MIDIActions[MIDIMessages.SET_TEMPO](trackIndex, midiMessage)); // FIXME
         }
       }
     });
@@ -99,5 +95,18 @@ function _initTracks(song) {
       currentDeltaTime: 0,
       currentMessageIndex: 0
     };
+  });
+}
+
+function _dispatchAllMIDIActions(tracks, songTracks, dispatch) {
+  let i, midiMessage;
+
+  tracks.forEach((track, trackIndex) => {
+    for (i = track.currentMessageIndex; i < songTracks[trackIndex].length; i++) {
+      midiMessage = songTracks[trackIndex][i];
+      if (MIDIActions[midiMessage.subtype]) {
+        dispatch(MIDIActions[midiMessage.subtype](trackIndex, midiMessage));
+      }
+    }
   });
 }

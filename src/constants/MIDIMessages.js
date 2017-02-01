@@ -1,4 +1,4 @@
-export default Object.freeze({
+export const MIDIMessages = Object.freeze({
   CHANNEL_AFTER_TOUCH: 'channelAftertouch',
   CONTROLLER: 'controller',
   CUE_POINT: 'cuePoint',
