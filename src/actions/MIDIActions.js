@@ -24,7 +24,7 @@ function programChange(trackIndex, midiMessage) {
 
 function noteOn(trackIndex, midiMessage) {
   return (dispatch, getState) => {
-    var state, instruments, instrument, deltaTime, type, payload, tracks, volume;
+    var state, instruments, instrument, deltaTime, type, payload, tracks, velocity;
 
     state = getState();
     type = MIDIMessages.NOTE_ON;
@@ -33,7 +33,7 @@ function noteOn(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     instruments = state.player.instruments;
     instrument = instruments[trackIndex];
-    volume = state.midi.volumes ? state.midi.volumes[trackIndex] : MAX_BYTES;
+    velocity = midiMessage.velocity;
 
     setTimeout(() => {
       dispatch({ type, payload });
@@ -42,7 +42,7 @@ function noteOn(trackIndex, midiMessage) {
         midiMessage.noteNumber,
         instrument,
         state.midi.audioContext.currentTime,
-        volume
+        velocity
       );
 
     }, deltaTime);
@@ -337,6 +337,7 @@ function noteOff(trackIndex, midiMessage) {
     instrument = instruments[trackIndex];
 
     setTimeout(() => {
+
       if (instrument) {
         instrument.stop();
       }
