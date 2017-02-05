@@ -3,8 +3,8 @@ import PlayerAction from '../actions/PlayerActions';
 const initialState = {
   isPlaying: false,
   ticksPerBeat: null,
-  tracks: null,
-  instruments: null
+  tracks: [],
+  instruments: []
 };
 
 export default function MIDIPlayerReducer(state = initialState, action) {

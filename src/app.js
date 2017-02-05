@@ -1,7 +1,7 @@
 import configureStore from './store/configureStore';
-import { PlayerActions } from './action-creators/PlayerActions';
-import { FileActions } from './action-creators/FileActions';
-import { MIDIActions } from './action-creators/MIDIActions';
+import * as PlayerActions from './action-creators/PlayerActions';
+import * as FileActions from './action-creators/FileActions';
+import * as MIDIActions from './action-creators/MIDIActions';
 
 import React from 'react';
 import ReactDOM from 'react-dom';

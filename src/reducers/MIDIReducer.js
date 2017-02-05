@@ -3,7 +3,7 @@ import { DEFAULT_TEMPO_BPM, DEFAULT_SIGNATURE } from '../constants/MIDIInstrumen
 
 const initialState = {
   audioContext: new AudioContext(),
-  currentDeltaTime: 0,
+  deltaTime: 0,
   tempo: DEFAULT_TEMPO_BPM,
   signature: DEFAULT_SIGNATURE
 };
@@ -17,7 +17,7 @@ export default function MIDIEventsReducer(state = initialState, action) {
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage,
         tempo: action.payload.tempo,
-        currentDeltaTime: action.payload.currentDeltaTime
+        deltaTime: action.payload.deltaTime
       };
     case MIDIAction.TIME_SIGNATURE:
       return {
@@ -26,7 +26,7 @@ export default function MIDIEventsReducer(state = initialState, action) {
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage,
         signature: action.payload.signature,
-        currentDeltaTime: action.payload.currentDeltaTime
+        deltaTime: action.payload.deltaTime
       };
     case MIDIAction.PROGRAM_CHANGE:
     case MIDIAction.SEQUENCE_NUMBER:
@@ -55,7 +55,7 @@ export default function MIDIEventsReducer(state = initialState, action) {
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage,
-        currentDeltaTime: action.payload.currentDeltaTime
+        deltaTime: action.payload.deltaTime
       };
     default:
       return state;

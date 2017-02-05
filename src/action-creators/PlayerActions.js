@@ -1,6 +1,6 @@
 import PlayerAction from '../actions/PlayerActions';
 import MIDIAction from '../actions/MIDIActions';
-import { MIDIActions } from '../action-creators/MIDIActions';
+import * as MIDIActions from '../action-creators/MIDIActions';
 import { MIDIInstruments, SOUNDS_PATH, SOUNDS_FILETYPE, SOUNDS_FILE_EXTENSION } from '../constants/MIDIInstruments';
 
 import Soundfont from 'soundfont-player';
@@ -31,7 +31,6 @@ export function loadInstruments() {
     songTracks = state.file.song.tracks;
     tracks = state.player.tracks;
     loadInstrumentPromises = [];
-
     instruments = new Array(tracks.length);
 
     dispatch({ type: PlayerAction.LOAD_INSTRUMENTS, payload: { instruments } });
@@ -42,7 +41,7 @@ export function loadInstruments() {
         if (midiMessage.subtype === MIDIAction.PROGRAM_CHANGE) {
           loadInstrumentPromises.push(dispatch(loadInstrument(trackIndex, midiMessage)));
         } else if (!state.midi.tempo && midiMessage.subtype === MIDIAction.SET_TEMPO && midiMessage.deltaTime === 0) {
-          dispatch(MIDIActions[MIDIAction.SET_TEMPO](trackIndex, midiMessage)); // FIXME
+          dispatch(MIDIActions[MIDIAction.SET_TEMPO](trackIndex, midiMessage));
         }
       }
     });

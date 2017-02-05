@@ -3,6 +3,7 @@ import * as PlayerActions from '../action-creators/PlayerActions';
 import * as FileActions from '../action-creators/FileActions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Instruments from './Instruments';
 
 function mapStateToProps(state) {
   return {
@@ -22,8 +23,6 @@ function mapDispatchToProps(dispatch) {
 class Layout extends Component {
   constructor(props) {
     super(props);
-    console.log('obj', {obj: this});
-    console.log('props', {props});
   }
 
   render() {
@@ -47,10 +46,12 @@ class Layout extends Component {
           <div class="row">
             <ul>
               <li>Tempo: {this.props.midi.tempo}</li>
-              <li>Delta: {this.props.midi.currentDeltaTime}</li>
-              <li>Is Playing: {this.props.player.isPlaying}</li>
+              <li>Delta: {this.props.midi.deltaTime}</li>
             </ul>
           </div>
+
+          <Instruments instruments={this.props.player.instruments} />
+
         </div>
       </div>
     );
