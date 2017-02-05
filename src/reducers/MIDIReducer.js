@@ -1,58 +1,61 @@
-import { MIDIMessages } from '../constants/MIDIMessages';
+import MIDIAction from '../actions/MIDIActions';
 import { DEFAULT_TEMPO_BPM, DEFAULT_SIGNATURE } from '../constants/MIDIInstruments';
 
 const initialState = {
   audioContext: new AudioContext(),
-  currentDelta: 0,
+  currentDeltaTime: 0,
   tempo: DEFAULT_TEMPO_BPM,
   signature: DEFAULT_SIGNATURE
 };
 
 export default function MIDIEventsReducer(state = initialState, action) {
   switch (action.type) {
-    case MIDIMessages.SET_TEMPO:
+    case MIDIAction.SET_TEMPO:
       return {
         ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage,
-        tempo: action.payload.tempo
+        tempo: action.payload.tempo,
+        currentDeltaTime: action.payload.currentDeltaTime
       };
-    case MIDIMessages.TIME_SIGNATURE:
+    case MIDIAction.TIME_SIGNATURE:
       return {
         ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
         midiMessage: action.payload.midiMessage,
-        signature: action.payload.signature
+        signature: action.payload.signature,
+        currentDeltaTime: action.payload.currentDeltaTime
       };
-    case MIDIMessages.PROGRAM_CHANGE:
-    case MIDIMessages.SEQUENCE_NUMBER:
-    case MIDIMessages.TEXT:
-    case MIDIMessages.TRACK_NAME:
-    case MIDIMessages.INSTRUMENT_NAME:
-    case MIDIMessages.LYRICS:
-    case MIDIMessages.MARKER:
-    case MIDIMessages.CUE_POINT:
-    case MIDIMessages.MIDI_CHANNEL_PREFIX:
-    case MIDIMessages.END_OF_TRACK:
-    case MIDIMessages.SMPTE_OFFSET:
-    case MIDIMessages.KEY_SIGNATURE:
-    case MIDIMessages.SEQUENCER_SPECIFIC:
-    case MIDIMessages.SYS_EX:
-    case MIDIMessages.DIVIDED_SYS_EX:
-    case MIDIMessages.LAST:
-    case MIDIMessages.NOTE_OFF:
-    case MIDIMessages.NOTE_ON:
-    case MIDIMessages.NOTE_AFTER_TOUCH:
-    case MIDIMessages.CHANNEL_AFTER_TOUCH:
-    case MIDIMessages.PITCH_BEND:
-    case MIDIMessages.UNKNOWN:
+    case MIDIAction.PROGRAM_CHANGE:
+    case MIDIAction.SEQUENCE_NUMBER:
+    case MIDIAction.TEXT:
+    case MIDIAction.TRACK_NAME:
+    case MIDIAction.INSTRUMENT_NAME:
+    case MIDIAction.LYRICS:
+    case MIDIAction.MARKER:
+    case MIDIAction.CUE_POINT:
+    case MIDIAction.MIDI_CHANNEL_PREFIX:
+    case MIDIAction.END_OF_TRACK:
+    case MIDIAction.SMPTE_OFFSET:
+    case MIDIAction.KEY_SIGNATURE:
+    case MIDIAction.SEQUENCER_SPECIFIC:
+    case MIDIAction.SYS_EX:
+    case MIDIAction.DIVIDED_SYS_EX:
+    case MIDIAction.LAST:
+    case MIDIAction.NOTE_OFF:
+    case MIDIAction.NOTE_ON:
+    case MIDIAction.NOTE_AFTER_TOUCH:
+    case MIDIAction.CHANNEL_AFTER_TOUCH:
+    case MIDIAction.PITCH_BEND:
+    case MIDIAction.UNKNOWN:
       return {
         ...state,
         tracks: action.payload.tracks,
         trackIndex: action.payload.trackIndex,
-        midiMessage: action.payload.midiMessage
+        midiMessage: action.payload.midiMessage,
+        currentDeltaTime: action.payload.currentDeltaTime
       };
     default:
       return state;

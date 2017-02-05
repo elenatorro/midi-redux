@@ -1,27 +1,29 @@
 import React, { Component } from 'react';
-import { PlayerActions } from '../actions/PlayerActions';
-import { FileActions } from '../actions/FileActions';
+import * as PlayerActions from '../action-creators/PlayerActions';
+import * as FileActions from '../action-creators/FileActions';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-let playerActions = (dispatch) => {
+function mapStateToProps(state) {
   return {
-    play: () => dispatch(PlayerActions.play()),
+    midi: state.midi,
+    file: state.file,
+    player: state.player
   };
-};
+}
 
-let fileActions = (dispatch) => {
+function mapDispatchToProps(dispatch) {
   return {
-    readMidiFile: (e) => {
-      dispatch(FileActions.readMidiFile(e.target.files[0]));
-    },
+    playerActions: bindActionCreators(PlayerActions, dispatch),
+    fileActions: bindActionCreators(FileActions, dispatch)
   };
-};
+}
 
 class Layout extends Component {
   constructor(props) {
     super(props);
-    this.player = playerActions(this.props.dispatch);
-    this.files = fileActions(this.props.dispatch);
+    console.log('obj', {obj: this});
+    console.log('props', {props});
   }
 
   render() {
@@ -33,13 +35,21 @@ class Layout extends Component {
             <div class="file-field input-field">
               <div class="btn-large waves-effect waves-light purple darken-2">
                 <span>Select MIDI file</span>
-                <input type="file" onChange={this.files.readMidiFile}/>
+                <input type="file" onChange={this.props.fileActions.readMidiFile}/>
               </div>
               <div class="file-path-wrapper">
                 <input class="file-path validate" type="text"/>
               </div>
             </div>
-            <button class="btn-large waves-effect waves-light purple darken-2" onClick={this.player.play}>Play Song</button>
+            <button class="btn-large waves-effect waves-light purple darken-2" onClick={this.props.playerActions.play}>Play Song</button>
+          </div>
+
+          <div class="row">
+            <ul>
+              <li>Tempo: {this.props.midi.tempo}</li>
+              <li>Delta: {this.props.midi.currentDeltaTime}</li>
+              <li>Is Playing: {this.props.player.isPlaying}</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -47,4 +57,4 @@ class Layout extends Component {
   }
 }
 
-export default connect()(Layout);
+export default connect(mapStateToProps, mapDispatchToProps)(Layout);

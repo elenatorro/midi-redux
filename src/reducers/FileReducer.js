@@ -1,4 +1,4 @@
-import { FileAction } from '../constants/general';
+import FileAction from '../actions/FileActions';
 
 const initialState = {
   song: null

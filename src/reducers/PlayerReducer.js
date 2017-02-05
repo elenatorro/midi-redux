@@ -1,4 +1,4 @@
-import { Player } from '../constants/general';
+import PlayerAction from '../actions/PlayerActions';
 
 const initialState = {
   isPlaying: false,
@@ -9,19 +9,19 @@ const initialState = {
 
 export default function MIDIPlayerReducer(state = initialState, action) {
   switch (action.type) {
-    case Player.PLAY:
+    case PlayerAction.PLAY:
       return {
         ...state,
         tracks: action.payload.tracks,
         isPlaying: true,
         ticksPerBeat: action.payload.ticksPerBeat
       };
-    case Player.LOAD_INSTRUMENT:
+    case PlayerAction.LOAD_INSTRUMENT:
       return {
         ...state,
         instruments: action.payload.instruments
       }
-    case Player.LOAD_INSTRUMENTS:
+    case PlayerAction.LOAD_INSTRUMENTS:
       return {
         ...state,
         instruments: action.payload.instruments
