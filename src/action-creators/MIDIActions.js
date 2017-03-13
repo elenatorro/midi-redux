@@ -13,8 +13,9 @@ export function programChange(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -33,7 +34,7 @@ export function noteOn(trackIndex, midiMessage) {
     instrument = instruments[trackIndex];
     velocity = midiMessage.velocity;
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
 
       InstrumentUtils.play(
@@ -43,6 +44,7 @@ export function noteOn(trackIndex, midiMessage) {
         velocity
       );
 
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -57,8 +59,9 @@ export function sequenceNumber(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -73,8 +76,9 @@ export function text(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -90,8 +94,9 @@ export function trackName(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -107,8 +112,9 @@ export function lyrics(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -124,8 +130,9 @@ export function marker(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -141,8 +148,9 @@ export function cuePoint(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -158,8 +166,9 @@ export function midiChannelPrefix(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -175,8 +184,9 @@ export function endOfTrack(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -194,8 +204,9 @@ export function setTempo(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, tempo, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -211,8 +222,9 @@ export function smpteOffset(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -229,8 +241,9 @@ export function timeSignature(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, signature, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -246,8 +259,9 @@ export function keySignature(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -263,8 +277,9 @@ export function sequencerSpecific(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -280,8 +295,9 @@ export function sysEx(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -297,8 +313,9 @@ export function dividedSysEx(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -314,8 +331,9 @@ export function last(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -333,13 +351,14 @@ export function noteOff(trackIndex, midiMessage) {
     instruments = state.player.instruments;
     instrument = instruments[trackIndex];
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
+      dispatch({ type, payload });
 
       if (instrument) {
         instrument.stop();
       }
 
-      dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime + STOP_DELAY_MS);
   };
 }
@@ -355,8 +374,9 @@ export function noteAftertouch(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -372,8 +392,9 @@ export function channelAftertouch(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -389,8 +410,9 @@ export function pitchBend(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -416,8 +438,9 @@ export function controller(trackIndex, midiMessage) {
       // TODO
     }
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
@@ -433,8 +456,9 @@ export function unknown(trackIndex, midiMessage) {
     deltaTime = _getDeltaSeconds.call(this, midiMessage, tracks, trackIndex, state);
     payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    setTimeout(() => {
+    var timeoutId = setTimeout(() => {
       dispatch({ type, payload });
+      clearTimeout(timeoutId);
     }, deltaTime);
   };
 }
