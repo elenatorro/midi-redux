@@ -2,6 +2,7 @@ import PlayerAction from '../actions/PlayerActions';
 import MIDIAction from '../actions/MIDIActions';
 import * as MIDIActions from '../action-creators/MIDIActions';
 import { MIDIInstruments, SOUNDS_PATH, SOUNDS_FILETYPE, SOUNDS_FILE_EXTENSION } from '../constants/MIDIInstruments';
+import { MIDIPercussion } from '../constants/MIDIPercussion';
 
 import Soundfont from 'soundfont-player';
 
@@ -56,7 +57,13 @@ export function loadInstrument(trackIndex, midiMessage) {
 
     state = getState();
     instruments = state.player.instruments;
-    instrumentName = MIDIInstruments[midiMessage.programNumber];
+
+    if (midiMessage.channel === 10) {
+      instrumentName = MIDIPercussion[midiMessage.programNumber];
+    } else {
+      instrumentName = MIDIInstruments[midiMessage.programNumber];
+    }
+
     instrumentPath = `${SOUNDS_PATH}/${instrumentName}-${SOUNDS_FILETYPE}.${SOUNDS_FILE_EXTENSION}`;
 
     return Soundfont.instrument(state.midi.audioContext, instrumentPath)

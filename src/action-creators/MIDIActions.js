@@ -340,7 +340,7 @@ export function last(trackIndex, midiMessage) {
 
 export function noteOff(trackIndex, midiMessage) {
   return (dispatch, getState) => {
-    const STOP_DELAY_MS = 1500;
+    const STOP_DELAY_MS = 1000;
     let state, type, payload, tracks, deltaTime, instrument, instruments;
 
     state = getState();
