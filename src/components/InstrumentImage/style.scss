@@ -1,0 +1,67 @@
+.instrument {
+  display: inline-block;
+  width: 3em;
+  height: 3em;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  vertical-align: middle;
+}
+
+$instruments:
+  'accordion'
+  'acoustic-guitar'
+  'amplifier'
+  'bagpipes'
+  'balalaika'
+  'banjo'
+  'bell'
+  'cabasa'
+  'chimes'
+  'clave'
+  'conga'
+  'cymbals-1'
+  'cymbals'
+  'djembe-1'
+  'domra'
+  'drum-1'
+  'drum-set'
+  'drum'
+  'drumsticks'
+  'electric-guitar'
+  'electric-guitar-1'
+  'flute'
+  'flute-1'
+  'flute-2'
+  'french-horn'
+  'harmonica'
+  'harp'
+  'keyboard'
+  'keytar'
+  'maracas'
+  'metronome'
+  'microphone'
+  'mixer'
+  'pedal'
+  'percussion'
+  'piano'
+  'saxophone'
+  'sitar'
+  'stand'
+  'synthesizer'
+  'tambourine'
+  'triangle'
+  'trumpet'
+  'tuning-fork'
+  'turntable'
+  'ukelele'
+  'viola'
+  'violin'
+  'xylophone';
+
+@each $instrument in $instruments {
+  .instrument-#{$instrument} {
+    background-image: url("./svg/#{$instrument}.svg");
+  }
+}

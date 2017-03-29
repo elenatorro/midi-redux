@@ -3,3 +3,4 @@ node_modules
 bower_components
 MIDIPlayerDemo.m4v
 src/app.min.js
+dist/bundle.js

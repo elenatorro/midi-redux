@@ -1,57 +1,106 @@
+/*jslint bitwise: true */
+
+import * as MIDIActions from '../action-creators/MIDIActions';
 import PlayerAction from '../actions/PlayerActions';
 import MIDIAction from '../actions/MIDIActions';
-import * as MIDIActions from '../action-creators/MIDIActions';
-import { MIDIInstruments, SOUNDS_PATH, SOUNDS_FILETYPE, SOUNDS_FILE_EXTENSION } from '../constants/MIDIInstruments';
-import { MIDIPercussion } from '../constants/MIDIPercussion';
 
 import Soundfont from 'soundfont-player';
 
+import { MIDIPercussion } from '../constants/MIDIPercussion';
+import { MIDIStreamReader } from '../utils/MIDIStreamReader';
+import { MIDIChunk } from '../utils/MIDIChunk';
+import { MIDIErrors } from '../utils/MIDIErrors';
+import { MIDIEventsReader } from '../utils/MIDIEventsReader';
+import { MIDIInstrumentImages } from '../constants/MIDIInstrumentImages';
+
+import {
+  MIDIInstruments, SOUNDS_PATH, SOUNDS_FILETYPE, SOUNDS_FILE_EXTENSION } from '../constants/MIDIInstruments';
+
 export function play() {
   return (dispatch, getState) => {
-    let state, tracks, ticksPerBeat, songTracks;
-
-    state = getState();
-    tracks = _initTracks.call(this, state.file.song);
-    songTracks = state.file.song.tracks;
-    ticksPerBeat = state.file.song.header.ticksPerBeat;
-
-    dispatch({ type: PlayerAction.PLAY, payload: { tracks, ticksPerBeat } });
-
-    dispatch(loadInstruments())
-      .then(() => {
-        _dispatchAllMIDIActions.call(this, tracks, songTracks, dispatch);
-      });
+    dispatch(_readTracks());
   };
 }
 
-export function loadInstruments() {
+// TODO
+export function pause() {
   return (dispatch, getState) => {
-    let state, tracks, instruments, songTracks, i, midiMessage, loadInstrumentPromises;
+    dispatch({type: PlayerAction.PAUSE});
+  };
+}
+
+// TODO
+export function stop() {
+  return (dispatch, getState) => {
+    dispatch({type: PlayerAction.STOP});
+  };
+}
+
+function _readTracks() {
+  return (dispatch, getState) => {
+    let state,
+      i,
+      trackChunk,
+      trackStream,
+      tracks,
+      song,
+      instrumentPromises,
+      instruments,
+      trackActions,
+      midiMessage,
+      stream,
+      header,
+      ticksPerBeat;
 
     state = getState();
-    songTracks = state.file.song.tracks;
-    tracks = state.player.tracks;
-    loadInstrumentPromises = [];
-    instruments = new Array(tracks.length);
+    song  = state.file.song;
 
-    dispatch({ type: PlayerAction.LOAD_INSTRUMENTS, payload: { instruments } });
+    stream       = MIDIStreamReader.readStream(song);
+    header       = _readHeader.call(this, stream, song);
+    ticksPerBeat = header.ticksPerBeat;
+    instruments  = new Array(header.trackCount);
+    tracks       = _initTracks.call(this, header.trackCount);
 
-    tracks.forEach((track, trackIndex) => {
-      for (i = track.currentMessageIndex; i < songTracks[trackIndex].length; i++) {
-        midiMessage = songTracks[trackIndex][i];
-        if (midiMessage.subtype === MIDIAction.PROGRAM_CHANGE) {
-          loadInstrumentPromises.push(dispatch(loadInstrument(trackIndex, midiMessage)));
-        } else if (!state.midi.tempo && midiMessage.subtype === MIDIAction.SET_TEMPO && midiMessage.deltaTime === 0) {
-          dispatch(MIDIActions[MIDIAction.SET_TEMPO](trackIndex, midiMessage));
-        }
-      }
+    trackActions       = [];
+    instrumentPromises = [];
+
+    dispatch({
+      type:    PlayerAction.PLAY,
+      payload: { tracks, ticksPerBeat }
     });
 
-    return Promise.all(loadInstrumentPromises);
+    for (i = 0; i < tracks.length; i++) {
+      trackChunk = MIDIChunk.readChunk(stream);
+
+      MIDIErrors.isValidTrackChunk(trackChunk);
+      trackStream = MIDIStreamReader.readStream(trackChunk.data);
+
+      while (!trackStream.eof()) {
+        midiMessage = MIDIEventsReader.readEvent(trackStream);
+        if (midiMessage.subtype === MIDIAction.PROGRAM_CHANGE) {
+          instrumentPromises.push(
+            dispatch(_loadInstrument(i, midiMessage))
+          );
+        } else if (_isFirstTempo.call(this, midiMessage)) {
+          dispatch(MIDIActions[MIDIAction.SET_TEMPO](i, midiMessage));
+        } else {
+          if (MIDIActions[midiMessage.subtype]) {
+            trackActions.push({ index: i, midiMessage });
+          }
+        }
+      }
+    }
+
+  return Promise.all(instrumentPromises)
+    .then((response) => {
+      trackActions.forEach((trackAction) => {
+        dispatch(_callMIDIAction.call(this, trackAction));
+      });
+    });
   };
 }
 
-export function loadInstrument(trackIndex, midiMessage) {
+function _loadInstrument(trackIndex, midiMessage) {
   return (dispatch, getState) => {
     let state, instruments, instrumentName, instrumentPath;
 
@@ -66,51 +115,65 @@ export function loadInstrument(trackIndex, midiMessage) {
 
     instrumentPath = `${SOUNDS_PATH}/${instrumentName}-${SOUNDS_FILETYPE}.${SOUNDS_FILE_EXTENSION}`;
 
-    return Soundfont.instrument(state.midi.audioContext, instrumentPath)
-      .then((instrument) => {
-        instruments[trackIndex] = instrument;
-        dispatch({ type: PlayerAction.LOAD_INSTRUMENT, payload: { instruments } });
-      })
-      .catch((reason) => {
-        console.error({reason});
+    return Soundfont.instrument(state.midi.audioContext, instrumentPath).then((instrument) => {
+      instrument.id = instrumentName;
+      instrument.image = MIDIInstrumentImages[instrumentName];
+      instruments[trackIndex] = instrument;
+      dispatch({
+        type:    PlayerAction.LOAD_INSTRUMENT,
+        payload: { instruments }
       });
+    }).catch((reason) => {
+      console.error({reason});
+    });
   };
 }
 
-// TODO
-export function pause() {
-  return (dispatch, getState) => {
-    dispatch({ type: PlayerAction.PAUSE });
-  };
-}
+function _initTracks(trackCount) {
+  let i = 0, tracks = [];
 
-// TODO
-export function stop() {
-  return (dispatch, getState) => {
-    dispatch({ type: PlayerAction.STOP });
-  };
-}
-
-/* Private */
-
-function _initTracks(song) {
-  return song.tracks.map((track, trackIndex) => {
-    return {
+  for (i; i < trackCount; i++) {
+    tracks.push({
       currentDeltaTime:    0,
-      currentMessageIndex: 0
-    };
-  });
+      currentMessageIndex: 0,
+      deltaTime:           0,
+      maxDeltaTime:        0
+    });
+  }
+
+  return tracks;
 }
 
-function _dispatchAllMIDIActions(tracks, songTracks, dispatch) {
-  let i, midiMessage;
+function _readHeader(stream, data) {
+  let headerChunk,
+    headerStream,
+    formatType,
+    trackCount,
+    timeDivision,
+    ticksPerBeat;
 
-  tracks.forEach((track, trackIndex) => {
-    for (i = track.currentMessageIndex; i < songTracks[trackIndex].length; i++) {
-      midiMessage = songTracks[trackIndex][i];
-      if (MIDIActions[midiMessage.subtype]) {
-        dispatch(MIDIActions[midiMessage.subtype](trackIndex, midiMessage));
-      }
-    }
-  });
+  headerChunk = MIDIChunk.readChunk(stream);
+  MIDIErrors.isValidHeaderChunk(headerChunk);
+
+  headerStream = MIDIStreamReader.readStream(headerChunk.data);
+  formatType   = headerStream.readInt16();
+  trackCount   = headerStream.readInt16();
+  timeDivision = headerStream.readInt16();
+
+  MIDIErrors.isValidTimeDivision(timeDivision);
+  ticksPerBeat = timeDivision;
+
+  return { formatType, trackCount, ticksPerBeat };
+}
+
+function _isFirstTempo(midiMessage) {
+  return midiMessage.subtype === MIDIAction.SET_TEMPO &&
+    midiMessage.deltaTime === 0;
+}
+
+function _callMIDIAction(trackAction) {
+  return MIDIActions[trackAction.midiMessage.subtype](
+    trackAction.index,
+    trackAction.midiMessage
+  );
 }

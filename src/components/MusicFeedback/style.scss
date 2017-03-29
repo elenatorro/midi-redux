@@ -1,0 +1,44 @@
+$spin-duration:  1s;
+$pulse-duration: 750ms;
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  25% {
+    transform: scale(1.1);
+  }
+}
+
+.loading {
+  position: relative;
+}
+
+.loading-spin {
+  animation: spin $spin-duration infinite linear;
+}
+
+.loading-pulse {
+  animation: pulse $pulse-duration infinite linear;
+}
+
+.feedback {
+  position: absolute;
+  text-align: center;
+  width: 5em;
+  top: 1em;
+  right: 2em;
+}
+
+.feedback-tempo {
+  width: 100%;
+  position: absolute;
+  line-height: 5em;
+  text-align: center;
+}

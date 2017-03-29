@@ -1,0 +1,20 @@
+.load-file {
+  display: inline-block;
+  margin: 1em;
+
+  .load-file-button {
+    float: none;
+    margin: 0 auto;
+    background-image: url('./svg/plus.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 50%;
+    width: 3em;
+    height: 3em;
+    color: white;
+    padding: 0;
+    background-color: transparent;
+    border: .5em solid rgba(153, 251, 183, 0.75);
+  }
+}

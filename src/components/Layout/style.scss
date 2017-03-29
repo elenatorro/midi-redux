@@ -1,0 +1,21 @@
+.layout {
+  height: 100%;
+  text-align: center;
+}
+
+.layout-title {
+  font-size: 2.2em;
+}
+
+.layout-container {
+  height: 100%;
+
+  .row {
+    margin: 1.5 auto;
+  }
+}
+
+.progress {
+  height: 10px;
+  width: 100%;
+}

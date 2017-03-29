@@ -8,6 +8,8 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import Layout from './components/Layout';
 
+import style from './main.scss';
+
 const store = configureStore();
 const app = document.getElementById('app');
 

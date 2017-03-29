@@ -31,5 +31,6 @@
   ],
   "regexp":   false,
   "sub":      true,
-  "white":    false
+  "white":    false,
+	"-W138": true
 }

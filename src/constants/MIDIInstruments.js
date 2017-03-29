@@ -9,8 +9,8 @@ export const SOUNDS_PATH = `${InstrumentPathConfig.URL}:${InstrumentPathConfig.P
 
 export const SOUNDS_FILETYPE = 'mp3';
 export const SOUNDS_FILE_EXTENSION = 'js';
-export const DEFAULT_TEMPO_BPM = null;
-export const DEFAULT_SIGNATURE = null;
+export const DEFAULT_TEMPO_BPM = 0;
+export const DEFAULT_SIGNATURE = 0;
 
 export const MIDIInstruments = {
   0: 'acoustic_grand_piano',

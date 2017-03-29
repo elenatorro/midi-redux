@@ -5,7 +5,8 @@ export const InstrumentUtils = {
   play(noteNumber, instrument, currentTime, velocity) {
     if (instrument) {
       return instrument.play(noteNumber, null, {
-        gain:  velocity / MAX_VELOCITY_BITS
+        gain:  velocity / MAX_VELOCITY_BITS,
+        release: 500
       });
     }
   }

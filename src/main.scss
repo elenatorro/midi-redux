@@ -1,0 +1,42 @@
+$color-primary:  #e2e1d5;
+$color-secondary: #e6e6e6;
+$color-font: #565656;
+$font-family: 'Montserrat';
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: $font-family, sans-serif;
+  color: $color-font;
+  background-color: $color-primary;
+  // background-image:
+  //   linear-gradient(45deg, $color-primary, $color-secondary);
+}
+
+.main {
+  height: 100%;
+}
+
+::-webkit-scrollbar {
+    width: .5em;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.1);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(0,0,0,0.1);
+}
