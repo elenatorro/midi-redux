@@ -34,12 +34,20 @@ $ webpack
 
 5. If you want to load your own instruments or load local files, you can change the configuration in `src/config/instruments-path`. I am using this project the sounds from this project: [Soundfont](https://github.com/gleitz/midi-js-soundfonts)
 
-## DOCS
+6. Find a great midi song on the Internet:
+  * http://www.midiworld.com/files/
+  * https://freemidi.org/
+  * etc...
 
-* Coming **SOON**
+7. Load your .mid file and play it!
 
-## DEMO
 
-[Video](https://twitter.com/eletorro/status/805501959436374019)
+## Screenshot
+
+![Midi Redux Interface](midi-redux-example.png)
+
+## Redux DevTools
+
+![Redux DevTools](midi-redux.gif)
 
 **FEEDBACK & HELP are super welcome**. It's my first project using React&Redux. I think it could be a very beautiful project :)
