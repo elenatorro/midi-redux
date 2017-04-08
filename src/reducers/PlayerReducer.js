@@ -1,14 +1,15 @@
 import PlayerAction from '../actions/PlayerActions';
 
 const initialState = {
-  tracks:       [],
-  isPlaying:    false,
-  instruments:  [],
+  tracks: [],
+  isPlaying: false,
+  instruments: [],
   ticksPerBeat: null
 };
 
-export default function MIDIPlayerReducer(state = initialState, action) {
+export default function MIDIPlayerReducer(state=initialState, action) {
   const { type, payload } = action;
+
   switch (type) {
     case PlayerAction.PLAY:
       return {

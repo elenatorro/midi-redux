@@ -23,13 +23,16 @@ class TrackInstruments extends Component {
     } = this.props;
 
     let track, percent;
+
     const tracksList = instruments.map((instrument, index) => {
       track   = tracks[index];
       percent = _getPercent(deltaTime, track.maxDeltaTime);
 
       return (
         <li key={index} className='row'>
-          <InstrumentImage instrument={instrument.image}/>
+          <InstrumentImage
+            instrument={instrument.image}
+          />
           <div className="instrument-progress col s11">
             {instrument.id}
             <Line

@@ -14,8 +14,8 @@ class PlayButton extends Component {
     return (
       <button
         className="btn play-button"
-        onClick={play}>
-      </button>
+        onClick={play}
+      />
     );
   }
 };

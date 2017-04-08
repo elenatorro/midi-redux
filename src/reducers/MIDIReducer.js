@@ -2,11 +2,11 @@ import MIDIAction from '../actions/MIDIActions';
 import { DEFAULT_TEMPO_BPM, DEFAULT_SIGNATURE } from '../constants/MIDIInstruments';
 
 const initialState = {
-  tempo:        DEFAULT_TEMPO_BPM,
-  tracks:       [],
-  deltaTime:    0,
-  signature:    DEFAULT_SIGNATURE,
-  isPlaying:    false,
+  tempo: DEFAULT_TEMPO_BPM,
+  tracks: [],
+  deltaTime: 0,
+  signature: DEFAULT_SIGNATURE,
+  isPlaying: false,
   audioContext: new AudioContext()
 };
 

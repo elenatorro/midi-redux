@@ -1,14 +1,14 @@
 .play-button {
+  width: 3em;
+  height: 3em;
+  padding: 0;
   display: inline-block;
   background-image: url('./svg/play-button.svg');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   border-radius: 50%;
-  width: 3em;
-  height: 3em;
   color: white;
-  padding: 0;
   background-color: transparent;
-  border: .5em solid rgba(153, 251, 183, 0.75);
+  border: .5em solid transparent;
 }

@@ -1,6 +1,7 @@
-$color-primary:  #e2e1d5;
-$color-secondary: #e6e6e6;
-$color-font: #565656;
+$color-primary:  #3e0076;
+$color-secondary: #8b0063;
+$color-font-title: white;
+$color-font: black;
 $font-family: 'Montserrat';
 
 html,
@@ -12,8 +13,10 @@ body {
   font-family: $font-family, sans-serif;
   color: $color-font;
   background-color: $color-primary;
-  // background-image:
-  //   linear-gradient(45deg, $color-primary, $color-secondary);
+}
+
+h1 {
+  color: $color-font-title;
 }
 
 .main {

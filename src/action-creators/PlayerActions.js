@@ -65,14 +65,14 @@ function _readTracks() {
     instrumentPromises = [];
 
     dispatch({
-      type:    PlayerAction.PLAY,
+      type: PlayerAction.PLAY,
       payload: { tracks, ticksPerBeat }
     });
 
     for (i = 0; i < tracks.length; i++) {
       trackChunk = MIDIChunk.readChunk(stream);
-
       MIDIErrors.isValidTrackChunk(trackChunk);
+
       trackStream = MIDIStreamReader.readStream(trackChunk.data);
 
       while (!trackStream.eof()) {
@@ -91,23 +91,22 @@ function _readTracks() {
       }
     }
 
-  return Promise.all(instrumentPromises)
-    .then((response) => {
-      trackActions.forEach((trackAction) => {
-        dispatch(_callMIDIAction.call(this, trackAction));
-      });
-    });
-  };
+    return Promise
+      .all(instrumentPromises)
+      .then(_callMidiActions.bind(this, trackActions, dispatch));
+    };
 }
 
 function _loadInstrument(trackIndex, midiMessage) {
   return (dispatch, getState) => {
+    const PERCUSSION_CHANNEL = 10;
+
     let state, instruments, instrumentName, instrumentPath;
 
     state = getState();
     instruments = state.player.instruments;
 
-    if (midiMessage.channel === 10) {
+    if (midiMessage.channel === PERCUSSION_CHANNEL) {
       instrumentName = MIDIPercussion[midiMessage.programNumber];
     } else {
       instrumentName = MIDIInstruments[midiMessage.programNumber];
@@ -119,12 +118,14 @@ function _loadInstrument(trackIndex, midiMessage) {
       instrument.id = instrumentName;
       instrument.image = MIDIInstrumentImages[instrumentName];
       instruments[trackIndex] = instrument;
+
       dispatch({
         type:    PlayerAction.LOAD_INSTRUMENT,
         payload: { instruments }
       });
+
     }).catch((reason) => {
-      console.error({reason});
+      console.error({ reason });
     });
   };
 }
@@ -134,10 +135,10 @@ function _initTracks(trackCount) {
 
   for (i; i < trackCount; i++) {
     tracks.push({
-      currentDeltaTime:    0,
+      currentDeltaTime: 0,
       currentMessageIndex: 0,
-      deltaTime:           0,
-      maxDeltaTime:        0
+      deltaTime: 0,
+      maxDeltaTime: 0
     });
   }
 
@@ -169,6 +170,12 @@ function _readHeader(stream, data) {
 function _isFirstTempo(midiMessage) {
   return midiMessage.subtype === MIDIAction.SET_TEMPO &&
     midiMessage.deltaTime === 0;
+}
+
+function _callMidiActions(trackActions, dispatch) {
+  return trackActions.forEach((trackAction) => {
+    dispatch(_callMIDIAction.call(this, trackAction));
+  });
 }
 
 function _callMIDIAction(trackAction) {
