@@ -24,7 +24,7 @@ const
 
   REACT_IMAGES_LOADER = {
     test: /\.(png|jpg|svg)$/,
-    loader: 'file-loader?name=/dist/images/[name].[ext]'
+    loader: 'file-loader?name=dist/images/[name].[ext]'
   },
 
   SCSS_LOADER = {
