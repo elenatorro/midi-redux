@@ -11,6 +11,13 @@ This is a sandbox project to learn the following concepts:
 
 ![MIDI-Redux schema](MidiRedux.png)
 
+m
+## Demo
+
+1. Open [https://elenatorro.github.io/midi-redux](elenatorro.github.io/midi-redux)
+2. Load a MIDI (.mid) file (you can find some examples [https://github.com/elenatorro/midi-redux/tree/master/midi-songs](here))
+3. Play!
+
 ## Installation
 
 1. Install packages

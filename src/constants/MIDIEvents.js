@@ -105,7 +105,7 @@ export const MIDIEvents = Object.freeze({
         NAME: 'noteOff'
       },
       NoteOn: {
-        BYTE: 0x80,
+        BYTE: 0x90,
         NAME: 'noteOn'
       },
       NoteAftertouch: {

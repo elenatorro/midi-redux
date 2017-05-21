@@ -5,7 +5,7 @@ export const InstrumentSets = {
 
 export const InstrumentPathConfig = {
   URL: 'http://localhost',
-  PORT: 8000,
+  PORT: 8001,
   SET: InstrumentSets.MUSYNG_KITE,
   URL_GITHUB: 'https://raw.githubusercontent.com/gleitz/midi-js-soundfonts/gh-pages/'
 };

@@ -64,7 +64,10 @@
     "babel-loader": "^6.4.1",
     "classnames": "^2.2.5",
     "file-loader": "^0.10.1",
+    "gulp": "^3.9.1",
     "rc-progress": "^2.1.0",
-    "react-bars": "^0.1.2"
+    "react-bars": "^0.1.2",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.2.0"
   }
 }

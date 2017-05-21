@@ -24,7 +24,7 @@ const
 
   REACT_IMAGES_LOADER = {
     test: /\.(png|jpg|svg)$/,
-    loader: 'file-loader?name=images/[name].[ext]'
+    loader: 'file-loader?name=/dist/images/[name].[ext]'
   },
 
   SCSS_LOADER = {
@@ -50,8 +50,8 @@ module.exports = {
     ]
   },
   output: {
-    path: `${__dirname}/${Path.SRC}/`,
-    filename: `${Path.OUTPUT}/${Path.OUTPUT_FILENAME}`
+    path: `${__dirname}/${Path.OUTPUT}/`,
+    filename: `${Path.OUTPUT_FILENAME}`
   },
   plugins: debug ? [] : [
     new webpack.optimize.DedupePlugin(),

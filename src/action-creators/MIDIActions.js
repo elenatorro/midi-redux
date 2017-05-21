@@ -347,7 +347,8 @@ export function setTempo(trackIndex, midiMessage) {
     tracks = _incrementTrackInfo.call(
       this, state.player.tracks, trackIndex, midiMessage);
 
-    tempo = TimeUtils.getBMP(midiMessage.microsecondsPerBeat, state.player.ticksPerBeat);
+    tempo = TimeUtils.getBMP(
+      midiMessage.microsecondsPerBeat, state.player.ticksPerBeat);
 
     [ deltaTime, tracks ] = _getDeltaSeconds.call(
       this, tracks, trackIndex, state);
@@ -800,7 +801,8 @@ function _getDeltaSeconds(tracks, trackIndex, state) {
     state.midi.signature
   );
 
-  tracks[trackIndex].maxDeltaTime = _getMaxDeltaTime.call(this, deltaTime, tracks[trackIndex].maxDeltaTime);
+  tracks[trackIndex].maxDeltaTime = _getMaxDeltaTime.call(
+    this, deltaTime, tracks[trackIndex].maxDeltaTime);
 
   return [deltaTime, tracks];
 }
