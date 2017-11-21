@@ -17,7 +17,6 @@ export default function MIDIEventsReducer(state=initialState, action) {
     case MIDIAction.SET_TEMPO:
     case MIDIAction.TIME_SIGNATURE:
     case MIDIAction.NOTE_ON:
-    case MIDIAction.END_OF_TRACK:
     case MIDIAction.NOTE_OFF:
     case MIDIAction.END_OF_TRACK:
     case MIDIAction.PROGRAM_CHANGE:

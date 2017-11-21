@@ -3,10 +3,9 @@
 import * as MIDIActions from '../action-creators/MIDIActions';
 import PlayerAction from '../actions/PlayerActions';
 import MIDIAction from '../actions/MIDIActions';
-
+import { Howl } from 'howler';
 import Soundfont from 'soundfont-player';
 
-import { MIDIPercussion } from '../constants/MIDIPercussion';
 import { MIDIStreamReader } from '../utils/MIDIStreamReader';
 import { MIDIChunk } from '../utils/MIDIChunk';
 import { MIDIErrors } from '../utils/MIDIErrors';
@@ -14,7 +13,19 @@ import { MIDIEventsReader } from '../utils/MIDIEventsReader';
 import { MIDIInstrumentImages } from '../constants/MIDIInstrumentImages';
 
 import {
-  MIDIInstruments, SOUNDS_PATH, SOUNDS_FILETYPE, SOUNDS_FILE_EXTENSION } from '../constants/MIDIInstruments';
+  MIDIInstruments,
+  SOUNDS_PATH,
+  SOUNDS_FILETYPE,
+  SOUNDS_FILE_EXTENSION
+} from '../constants/MIDIInstruments';
+
+import {
+  MIDIPercussion,
+  PERCUSSION_PATH,
+  PERCUSSION_FILETYPE,
+  PERCUSSION_CHANNEL,
+  DEFAULT_PROGRAM_NUMBER
+} from '../constants/MIDIPercussion';
 
 export function play() {
   return (dispatch, getState) => {
@@ -22,118 +33,190 @@ export function play() {
   };
 }
 
-// TODO
-export function pause() {
+export function restart() {
   return (dispatch, getState) => {
-    dispatch({type: PlayerAction.PAUSE});
-  };
-}
-
-// TODO
-export function stop() {
-  return (dispatch, getState) => {
-    dispatch({type: PlayerAction.STOP});
-  };
-}
-
-function _readTracks() {
-  return (dispatch, getState) => {
-    let state,
-      i,
-      trackChunk,
-      trackStream,
-      tracks,
-      song,
-      instrumentPromises,
-      instruments,
-      trackActions,
-      midiMessage,
-      stream,
-      header,
-      ticksPerBeat;
-
-    state = getState();
-    song  = state.file.song;
-
-    stream       = MIDIStreamReader.readStream(song);
-    header       = _readHeader.call(this, stream, song);
-    ticksPerBeat = header.ticksPerBeat;
-    instruments  = new Array(header.trackCount);
-    tracks       = _initTracks.call(this, header.trackCount);
-
-    trackActions       = [];
-    instrumentPromises = [];
+    const state = getState();
+    const trackActions = state.player.trackActions;
+    const ticksPerBeat = state.player.ticksPerBeat;
+    const tracks = state.player.tracks;
+    const currentTrackActionIndex = state.player.currentTrackActionIndex;
 
     dispatch({
       type: PlayerAction.PLAY,
       payload: { tracks, ticksPerBeat }
     });
 
-    for (i = 0; i < tracks.length; i++) {
-      trackChunk = MIDIChunk.readChunk(stream);
+    return _callMidiActions
+      .call(this, trackActions, currentTrackActionIndex, dispatch);
+  };
+}
+
+export function pause() {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    _clearIntervals.call(this, state.player.intervals);
+
+    dispatch({
+      type: PlayerAction.PAUSE
+    });
+
+    dispatch({
+      type: PlayerAction.SET_INTERVALS,
+      payload: { intervals: []}
+    });
+  };
+}
+
+export function stop() {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    _clearIntervals.call(this, state.player.intervals);
+
+    dispatch({
+      type: PlayerAction.STOP
+    });
+
+    dispatch({
+      type: PlayerAction.LOADED,
+      payload: { isLoaded: false }
+    });
+
+    dispatch({
+      type: PlayerAction.SET_INTERVALS,
+      payload: { intervals: []}
+    });
+
+    dispatch({
+      type: PlayerAction.CURRENT_ACTION_INDEX,
+      payload: { currentTrackActionIndex: 0 }
+    });
+  };
+}
+
+function _readTracks() {
+  return (dispatch, getState) => {
+    const state = getState();
+    const song = state.file.song;
+    const stream = MIDIStreamReader.readStream(song);
+    const header = _readHeader.call(this, stream, song);
+    const ticksPerBeat = header.ticksPerBeat;
+    const tracks = _initTracks.call(this, header.trackCount);
+
+    let trackActions = [];
+    let instrumentPromises = [];
+
+    dispatch({
+      type: PlayerAction.PLAY,
+      payload: { tracks, ticksPerBeat }
+    });
+
+    for (let index = 0; index < tracks.length; index++) {
+      const trackChunk = MIDIChunk.readChunk(stream);
       MIDIErrors.isValidTrackChunk(trackChunk);
 
-      trackStream = MIDIStreamReader.readStream(trackChunk.data);
+      const trackStream = MIDIStreamReader.readStream(trackChunk.data);
 
       while (!trackStream.eof()) {
-        midiMessage = MIDIEventsReader.readEvent(trackStream);
+        const midiMessage = MIDIEventsReader.readEvent(trackStream);
+
         if (midiMessage.subtype === MIDIAction.PROGRAM_CHANGE) {
-          instrumentPromises.push(
-            dispatch(_loadInstrument(i, midiMessage))
-          );
+          if (midiMessage.channel === PERCUSSION_CHANNEL) {
+            instrumentPromises.push(dispatch(_loadPercussion(index, midiMessage)));
+          } else {
+            instrumentPromises.push(dispatch(_loadInstrument(index, midiMessage)));
+          }
         } else if (_isFirstTempo.call(this, midiMessage)) {
-          dispatch(MIDIActions[MIDIAction.SET_TEMPO](i, midiMessage));
+          dispatch(MIDIActions[MIDIAction.SET_TEMPO](index, midiMessage));
         } else {
           if (MIDIActions[midiMessage.subtype]) {
-            trackActions.push({ index: i, midiMessage });
+            trackActions.push({ index, midiMessage });
           }
         }
       }
     }
 
+    const currentTrackActionIndex = 0;
+
     return Promise
       .all(instrumentPromises)
-      .then(_callMidiActions.bind(this, trackActions, dispatch));
+      .then(() => {
+        dispatch({
+          type: PlayerAction.LOADED,
+          payload: { isLoaded: true }
+        });
+
+        dispatch({
+          type: PlayerAction.CURRENT_ACTION_INDEX,
+          payload: { currentTrackActionIndex }
+        });
+
+        return _callMidiActions
+          .call(this, trackActions, currentTrackActionIndex, dispatch);
+      });
     };
 }
 
 function _loadInstrument(trackIndex, midiMessage) {
   return (dispatch, getState) => {
-    const PERCUSSION_CHANNEL = 10;
+    const state = getState();
+    const instruments = state.player.instruments;
+    const instrumentName = MIDIInstruments[midiMessage.programNumber];
+    const instrumentPath = `${SOUNDS_PATH}/${instrumentName}-${SOUNDS_FILETYPE}.${SOUNDS_FILE_EXTENSION}`;
 
-    let state, instruments, instrumentName, instrumentPath;
+    return Soundfont.instrument(state.midi.audioContext, instrumentPath)
+      .then((instrument) => {
+        instrument.id = instrumentName;
+        instrument.image = MIDIInstrumentImages[instrumentName];
+        instruments[trackIndex] = instrument;
 
-    state = getState();
-    instruments = state.player.instruments;
-
-    if (midiMessage.channel === PERCUSSION_CHANNEL) {
-      instrumentName = MIDIPercussion[midiMessage.programNumber];
-    } else {
-      instrumentName = MIDIInstruments[midiMessage.programNumber];
-    }
-
-    instrumentPath = `${SOUNDS_PATH}/${instrumentName}-${SOUNDS_FILETYPE}.${SOUNDS_FILE_EXTENSION}`;
-
-    return Soundfont.instrument(state.midi.audioContext, instrumentPath).then((instrument) => {
-      instrument.id = instrumentName;
-      instrument.image = MIDIInstrumentImages[instrumentName];
-      instruments[trackIndex] = instrument;
-
-      dispatch({
-        type:    PlayerAction.LOAD_INSTRUMENT,
-        payload: { instruments }
+        dispatch({
+          type: PlayerAction.LOAD_INSTRUMENT,
+          payload: { instruments }
+        });
+      })
+      .catch((reason) => {
+        console.error({ reason });
       });
-
-    }).catch((reason) => {
-      console.error({ reason });
-    });
   };
 }
 
-function _initTracks(trackCount) {
-  let i = 0, tracks = [];
+function _loadPercussion(trackIndex, midiMessage) {
+    return (dispatch, getState) => {
+      const instrumentName = MIDIPercussion[midiMessage.programNumber]
+        ? `${midiMessage.programNumber}_${MIDIPercussion[midiMessage.programNumber]}`
+        : `${DEFAULT_PROGRAM_NUMBER}_${MIDIPercussion[DEFAULT_PROGRAM_NUMBER]}`;
+      const instrumentPath = `${PERCUSSION_PATH}/${instrumentName}.${PERCUSSION_FILETYPE}`;
 
-  for (i; i < trackCount; i++) {
+      const sound = new Howl({
+        src: instrumentPath
+      });
+
+      const state = getState();
+
+      let instruments = state.player.instruments;
+      const soundLoaderPromise = new Promise((resolve, reject) => {
+        sound.once('load', function() {
+          instruments[trackIndex] = sound;
+
+          dispatch({
+            type: PlayerAction.LOAD_INSTRUMENT,
+            payload: { instruments }
+          });
+
+          resolve(sound);
+        });
+      });
+
+      return soundLoaderPromise;
+    };
+}
+
+function _initTracks(trackCount) {
+  let tracks = [];
+
+  for (let index = 0; index < trackCount; index++) {
     tracks.push({
       currentDeltaTime: 0,
       currentMessageIndex: 0,
@@ -146,23 +229,16 @@ function _initTracks(trackCount) {
 }
 
 function _readHeader(stream, data) {
-  let headerChunk,
-    headerStream,
-    formatType,
-    trackCount,
-    timeDivision,
-    ticksPerBeat;
-
-  headerChunk = MIDIChunk.readChunk(stream);
+  const headerChunk = MIDIChunk.readChunk(stream);
   MIDIErrors.isValidHeaderChunk(headerChunk);
 
-  headerStream = MIDIStreamReader.readStream(headerChunk.data);
-  formatType   = headerStream.readInt16();
-  trackCount   = headerStream.readInt16();
-  timeDivision = headerStream.readInt16();
-
+  const headerStream = MIDIStreamReader.readStream(headerChunk.data);
+  const formatType   = headerStream.readInt16();
+  const trackCount   = headerStream.readInt16();
+  const timeDivision = headerStream.readInt16();
   MIDIErrors.isValidTimeDivision(timeDivision);
-  ticksPerBeat = timeDivision;
+
+  const ticksPerBeat = timeDivision;
 
   return { formatType, trackCount, ticksPerBeat };
 }
@@ -172,10 +248,12 @@ function _isFirstTempo(midiMessage) {
     midiMessage.deltaTime === 0;
 }
 
-function _callMidiActions(trackActions, dispatch) {
-  return trackActions.forEach((trackAction) => {
-    dispatch(_callMIDIAction.call(this, trackAction));
-  });
+function _callMidiActions(trackActions, currentTrackActionIndex, dispatch) {
+  let i = currentTrackActionIndex;
+
+  for (i; i < trackActions.length; i++) {
+    dispatch(_callMIDIAction.call(this, trackActions[i], i));
+  }
 }
 
 function _callMIDIAction(trackAction) {
@@ -183,4 +261,10 @@ function _callMIDIAction(trackAction) {
     trackAction.index,
     trackAction.midiMessage
   );
+}
+
+function _clearIntervals(intervals) {
+  return intervals.forEach((interval) => {
+    clearInterval(interval);
+  });
 }

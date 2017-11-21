@@ -1,808 +1,536 @@
 import MIDIAction from '../actions/MIDIActions';
+import PlayerAction from '../actions/PlayerActions';
 import { TimeUtils } from '../utils/TimeUtils';
 import { InstrumentUtils } from '../utils/InstrumentUtils';
 import { MIDIControllerTypes } from '../constants/MIDIControllers';
 
-export function programChange(trackIndex, midiMessage) {
+export function programChange(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type  = MIDIAction.PROGRAM_CHANGE;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.PROGRAM_CHANGE;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      clearInterval(intervalId);
+      dispatch({ type, payload });
     }, deltaTime);
   };
 }
 
-export function noteOn(trackIndex, midiMessage) {
+export function noteOn(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
-
     const isPlaying = true;
+    const state = getState();
+    const type = MIDIAction.NOTE_ON;
 
-    let state,
-      instruments,
-      instrument,
-      deltaTime,
-      type,
-      payload,
-      tracks,
-      velocity;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.NOTE_ON;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const instruments = state.player.instruments;
+    const instrument = instruments[trackIndex];
+    const velocity = midiMessage.velocity;
+    const noteNumber = midiMessage.noteNumber;
+    const channel = midiMessage.channel;
+    const currentTime = state.midi.audioContext.currentTime;
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime,
-      isPlaying
-    };
+    const payload = { tracks, trackIndex, midiMessage, deltaTime, isPlaying };
 
-    instruments = state.player.instruments;
-    instrument = instruments[trackIndex];
-    velocity = midiMessage.velocity;
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
 
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
+      InstrumentUtils
+        .play(noteNumber, channel, instrument,  currentTime, velocity);
 
-      InstrumentUtils.play(midiMessage.noteNumber, instrument, state.midi.audioContext.currentTime, velocity);
-
-      clearTimeout(timeoutId);
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function sequenceNumber(trackIndex, midiMessage) {
+export function sequenceNumber(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.SEQUENCE_NUMBER;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.SEQUENCE_NUMBER;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function text(trackIndex, midiMessage) {
+export function text(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.TEXT;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.TEXT;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function trackName(trackIndex, midiMessage) {
+export function trackName(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.TRACK_NAME;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state = getState();
-    type = MIDIAction.TRACK_NAME;
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
-
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function lyrics(trackIndex, midiMessage) {
+export function lyrics(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.LYRICS;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.LYRICS;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function marker(trackIndex, midiMessage) {
+export function marker(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.MARKER;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.MARKER;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function cuePoint(trackIndex, midiMessage) {
+export function cuePoint(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.CUE_POINT;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.CUE_POINT;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
+    }, deltaTime);
 
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+  };
+}
+
+export function midiChannelPrefix(trackIndex, midiMessage, currentTrackActionIndex) {
+  return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.MIDI_CHANNEL_PREFIX;
+
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
+
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
+
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
+
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function midiChannelPrefix(trackIndex, midiMessage) {
+export function endOfTrack(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
-
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
-
-    state  = getState();
-    type   = MIDIAction.MIDI_CHANNEL_PREFIX;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
-
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
-
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
-    }, deltaTime);
-  };
-}
-
-export function endOfTrack(trackIndex, midiMessage) {
-  return (dispatch, getState) => {
-
+    const state = getState();
     const isPlaying = false;
+    const type = MIDIAction.END_OF_TRACK;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime,
-      deltaLength;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.END_OF_TRACK;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const payload = { tracks, trackIndex, midiMessage, deltaTime, isPlaying };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime,
-      deltaLength,
-      isPlaying
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function setTempo(trackIndex, midiMessage) {
+
+export function setTempo(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.SET_TEMPO;
 
-    let state,
-      type,
-      tempo,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.SET_TEMPO;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const tempo = TimeUtils
+      .getBMP(midiMessage.microsecondsPerBeat, state.player.ticksPerBeat);
 
-    tempo = TimeUtils.getBMP(
-      midiMessage.microsecondsPerBeat, state.player.ticksPerBeat);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const payload = { tracks, trackIndex, midiMessage, tempo, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      tempo,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function smpteOffset(trackIndex, midiMessage) {
+export function smpteOffset(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.SMPTE_OFFSET;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.SMPTE_OFFSET;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function timeSignature(trackIndex, midiMessage) {
+export function timeSignature(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.TIME_SIGNATURE;
+    const signature = midiMessage.thirtyseconds;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime,
-      signature;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.TIME_SIGNATURE;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    signature = midiMessage.thirtyseconds;
+    const payload = { tracks, trackIndex, midiMessage, signature, deltaTime };
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
-
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      signature,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function keySignature(trackIndex, midiMessage) {
+export function keySignature(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.KEY_SIGNATURE;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.KEY_SIGNATURE;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function sequencerSpecific(trackIndex, midiMessage) {
+export function sequencerSpecific(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.SEQUENCER_SPECIFIC;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.SEQUENCER_SPECIFIC;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function sysEx(trackIndex, midiMessage) {
+export function sysEx(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.SYS_EX;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.SYS_EX;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function dividedSysEx(trackIndex, midiMessage) {
+export function dividedSysEx(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.DIVIDED_SYS_EX;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.DIVIDED_SYS_EX;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function last(trackIndex, midiMessage) {
+export function last(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.LAST;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.LAST;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function noteOff(trackIndex, midiMessage) {
+export function noteOff(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.NOTE_OFF;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime,
-      instrument,
-      instruments;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.NOTE_OFF;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const instruments = state.player.instruments;
+    const instrument = instruments[trackIndex];
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    instruments = state.player.instruments;
-    instrument = instruments[trackIndex];
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
 
       if (instrument) {
         instrument.stop();
       }
 
-      clearTimeout(timeoutId);
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function noteAftertouch(trackIndex, midiMessage) {
+export function noteAftertouch(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    return (dispatch, getState) => {
+      const state = getState();
+      const type = MIDIAction.NOTE_AFTER_TOUCH;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+      const initTracks = _incrementTrackInfo
+        .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.NOTE_AFTER_TOUCH;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+      const [ deltaTime, tracks ] = _getDeltaSeconds
+        .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+      const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
+      const intervalId = setInterval(() => {
+        dispatch({ type, payload });
+        clearInterval(intervalId);
+      }, deltaTime);
     };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
-    }, deltaTime);
   };
 }
 
-export function channelAftertouch(trackIndex, midiMessage) {
+export function channelAftertouch(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    return (dispatch, getState) => {
+      const state = getState();
+      const type = MIDIAction.AFTER_TOUCH;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+      const initTracks = _incrementTrackInfo
+        .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.CHANNEL_AFTER_TOUCH;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+      const [ deltaTime, tracks ] = _getDeltaSeconds
+        .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+      const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
+      const intervalId = setInterval(() => {
+        dispatch({ type, payload });
+        clearInterval(intervalId);
+      }, deltaTime);
     };
+  };
+}
 
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+export function pitchBend(trackIndex, midiMessage, currentTrackActionIndex) {
+  return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.PITCH_BEND;
+
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
+
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
+
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
+
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function pitchBend(trackIndex, midiMessage) {
+export function controller(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.CONTROLLER;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.PITCH_BEND;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = (midiMessage.deltaTime !== 0)
+      ? _getDeltaSeconds.call(this, initTracks, trackIndex, state)
+      : [ midiMessage.deltaTime, initTracks ];
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
-
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
-    }, deltaTime);
-  };
-}
-
-export function controller(trackIndex, midiMessage) {
-  return (dispatch, getState) => {
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime,
-      volumes;
-
-    state  = getState();
-    type   = MIDIAction.CONTROLLER;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
-
-    volumes = state.midi.volumes || new Array(tracks.length);
-
-    deltaTime = (midiMessage.deltaTime !== 0) ?
-      _getDeltaSeconds.call(this, tracks, trackIndex, state)
-      : midiMessage.deltaTime;
+    let volumes = state.midi.volumes || new Array(tracks.length);
+    let payload = {};
 
     if (midiMessage.controllerType === MIDIControllerTypes.VOLUME) {
       volumes[trackIndex] = midiMessage.value;
-
-      payload = {
-        tracks,
-        trackIndex,
-        midiMessage,
-        volumes,
-        deltaTime
-      };
+      payload = { tracks, trackIndex, midiMessage, volumes, deltaTime };
     }
 
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
-export function unknown(trackIndex, midiMessage) {
+export function unknown(trackIndex, midiMessage, currentTrackActionIndex) {
   return (dispatch, getState) => {
+    const state = getState();
+    const type = MIDIAction.UNKNOWN;
 
-    let state,
-      type,
-      payload,
-      tracks,
-      deltaTime;
+    const initTracks = _incrementTrackInfo
+      .call(this, state.player.tracks, trackIndex, midiMessage);
 
-    state  = getState();
-    type   = MIDIAction.UNKNOWN;
-    tracks = _incrementTrackInfo.call(
-      this, state.player.tracks, trackIndex, midiMessage);
+    const [ deltaTime, tracks ] = _getDeltaSeconds
+      .call(this, initTracks, trackIndex, state);
 
-    [ deltaTime, tracks ] = _getDeltaSeconds.call(
-      this, tracks, trackIndex, state);
+    const payload = { tracks, trackIndex, midiMessage, deltaTime };
 
-    payload = {
-      tracks,
-      trackIndex,
-      midiMessage,
-      deltaTime
-    };
-
-    const timeoutId = setTimeout(() => {
-      dispatch({type, payload});
-      clearTimeout(timeoutId);
+    const intervalId = setInterval(() => {
+      dispatch({ type, payload });
+      clearInterval(intervalId);
     }, deltaTime);
   };
 }
 
 function _getDeltaSeconds(tracks, trackIndex, state) {
-  let deltaTime = TimeUtils.getDeltaSeconds(
+  const deltaTime = TimeUtils.getDeltaSeconds(
     tracks[trackIndex].currentDeltaTime,
     state.player.ticksPerBeat,
     state.midi.tempo,
     state.midi.signature
   );
 
-  tracks[trackIndex].maxDeltaTime = _getMaxDeltaTime.call(
-    this, deltaTime, tracks[trackIndex].maxDeltaTime);
+  tracks[trackIndex].maxDeltaTime = _getMaxDeltaTime
+    .call(this, deltaTime, tracks[trackIndex].maxDeltaTime);
 
   return [deltaTime, tracks];
 }
@@ -815,7 +543,7 @@ function _incrementTrackInfo(tracks, trackIndex, midiMessage) {
 }
 
 function _getMaxDeltaTime(deltaTime, maxDeltaTime) {
-  return maxDeltaTime > deltaTime ?
-    maxDeltaTime
+  return maxDeltaTime > deltaTime
+    ? maxDeltaTime
     : deltaTime;
 }

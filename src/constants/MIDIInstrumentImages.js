@@ -126,5 +126,6 @@ export const MIDIInstrumentImages = {
  'telephone_ring':       'synthesizer',
  'helicopter':           'synthesizer',
  'applause':             'synthesizer',
- 'gunshot':              'synthesizer'
+ 'gunshot':              'synthesizer',
+ 'default':              'drum'
 };

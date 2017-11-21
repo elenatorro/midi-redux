@@ -8,7 +8,7 @@
 import { InstrumentPathConfig } from '../config/instruments-path';
 
 export const SOUNDS_PATH =
-  `${InstrumentPathConfig.URL_GITHUB}/${InstrumentPathConfig.SET}`;
+  `${InstrumentPathConfig.URL}:${InstrumentPathConfig.PORT}/${InstrumentPathConfig.SET}`;
 
 export const SOUNDS_FILETYPE = 'mp3';
 export const DEFAULT_TEMPO_BPM = 0;
