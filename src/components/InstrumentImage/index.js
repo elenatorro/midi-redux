@@ -9,7 +9,7 @@ class InstrumentImage extends Component {
       instrument
     } = this.props;
 
-    const className = `instrument instrument-${instrument} col s1`;
+    const className = `instrument-image instrument-${instrument} col s1`;
 
     return <div className={className} />
   }

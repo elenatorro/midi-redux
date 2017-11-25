@@ -24,7 +24,7 @@ class MusicFeedback extends Component {
     const isPlaying   = song && isMidiPlaying;
     const isLoading   = song && !isMidiPlaying && isPlayerPlaying;
     const strokeWidth = 3;
-    const strokeColor = '#ff6c4f';
+    const strokeColor = '#FFFFFF';
 
     let percent, className, feedback;
 
@@ -50,7 +50,6 @@ class MusicFeedback extends Component {
           strokeWidth={strokeWidth}
           strokeColor={strokeColor}
           className={className}/>
-        <p>Tempo</p>
       </div>
     );
   }

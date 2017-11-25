@@ -12,14 +12,12 @@ class LoadFileButton extends Component {
     const { readMidiFile } = this.props;
 
     return (
-      <div className="file-field input-field load-file">
-        <input type="file" onChange={readMidiFile}/>
-        <button className="btn load-file-button">
-
-        </button>
+      <div class="load-file-wrapper">
+        <button class="load-file-button">Upload a file</button>
+        <input type="file" onChange={readMidiFile} />
       </div>
     );
   }
-};
+}
 
 export default connect()(LoadFileButton);

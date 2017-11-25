@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import MusicFeedback from '../MusicFeedback';
 import PlayButton from '../PlayButton';
+import MusicFeedback from '../MusicFeedback';
 import LoadFileButton from '../LoadFileButton';
-import TrackInstruments from '../TrackInstruments';
 
 import style from './style.scss';
 
@@ -14,6 +13,7 @@ class Player extends Component {
   }
 
   render() {
+
     const {
       file,
       midi,
@@ -22,10 +22,17 @@ class Player extends Component {
       play
     } = this.props;
 
-    return (
-      <section class="card player">
+    const SongName = !file.song
+      ? ""
+      : <section>
+        <p>Song</p>
+        <p class="player-songname">{file.fileName}</p>
+      </section>;
 
-        <header class="card-content center-align player-content">
+    return (
+      <section class="player">
+
+        <header class="player-header">
           <PlayButton
             play={play}
           />
@@ -34,6 +41,9 @@ class Player extends Component {
             readMidiFile={readMidiFile}
             fileName={file.fileName}
           />
+        </header>
+
+        <section class="card-action player-action">
 
           <MusicFeedback
             song={file.song}
@@ -44,15 +54,8 @@ class Player extends Component {
             isPlayerPlaying={player.isPlaying}
           />
 
-          <p>Song: {file.fileName}</p>
-        </header>
+          {SongName}
 
-        <section class="card-action player-action">
-          <TrackInstruments
-            tracks={midi.tracks}
-            deltaTime={midi.deltaTime}
-            instruments={player.instruments}
-          />
         </section>
       </section>
     );

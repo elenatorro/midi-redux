@@ -1,5 +1,33 @@
+.instruments {
+  list-style: none;
+  margin: 0;
+  padding: 1em;
+}
+
+.instrument {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.instrument-name {
+  margin: 0;
+  font-size: 1em;
+  padding: .5em 0 0 0;
+}
+
+.instrument-info {
+  display: flex;
+  align-items: center;
+}
+
 .instrument-progress {
   width: 100%;
-  padding: 1em;
+  padding: .5em 0;
   display: inline-block;
+
+  svg {
+    background-color: #faeaee;
+    border-radius: 50px;
+  }
 }

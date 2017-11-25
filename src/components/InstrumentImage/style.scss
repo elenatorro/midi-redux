@@ -1,12 +1,11 @@
-.instrument {
-  display: inline-block;
+.instrument-image {
   width: 3em;
   height: 3em;
+  margin: 0 1em 0 0;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   background-color: transparent;
-  vertical-align: middle;
 }
 
 $instruments:

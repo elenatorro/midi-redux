@@ -23,7 +23,6 @@ import {
   MIDIPercussion,
   PERCUSSION_PATH,
   PERCUSSION_FILETYPE,
-  PERCUSSION_CHANNEL,
   DEFAULT_PROGRAM_NUMBER
 } from '../constants/MIDIPercussion';
 
@@ -122,11 +121,7 @@ function _readTracks() {
         const midiMessage = MIDIEventsReader.readEvent(trackStream);
 
         if (midiMessage.subtype === MIDIAction.PROGRAM_CHANGE) {
-          if (midiMessage.channel === PERCUSSION_CHANNEL) {
-            instrumentPromises.push(dispatch(_loadPercussion(index, midiMessage)));
-          } else {
-            instrumentPromises.push(dispatch(_loadInstrument(index, midiMessage)));
-          }
+          instrumentPromises.push(dispatch(_loadInstrument(index, midiMessage)));
         } else if (_isFirstTempo.call(this, midiMessage)) {
           dispatch(MIDIActions[MIDIAction.SET_TEMPO](index, midiMessage));
         } else {

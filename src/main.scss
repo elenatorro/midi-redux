@@ -1,18 +1,19 @@
-$color-primary:  #3e0076;
-$color-secondary: #8b0063;
+$color-primary: #f2b7c5;
+$color-secondary: #f3e1cb;
+$color-contrast: #ec95ac;
 $color-font-title: white;
 $color-font: black;
 $font-family: 'Montserrat';
 
-html,
-body {
+body,
+html {
   height: 100%;
 }
 
 body {
   font-family: $font-family, sans-serif;
   color: $color-font;
-  background-color: $color-primary;
+  background-image: linear-gradient(45deg, $color-primary, $color-secondary);
 }
 
 h1 {
@@ -24,22 +25,22 @@ h1 {
 }
 
 ::-webkit-scrollbar {
-    width: .5em;
+  width: 0.5em;
 }
 
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    background: rgba(0,0,0,0.1);
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.1);
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
 }
 
 ::-webkit-scrollbar-thumb:window-inactive {
-	background: rgba(0,0,0,0.1);
+  background: rgba(0,0,0,0.1);
 }

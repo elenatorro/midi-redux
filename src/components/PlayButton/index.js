@@ -12,10 +12,7 @@ class PlayButton extends Component {
     const { play } = this.props;
 
     return (
-      <button
-        className="btn play-button"
-        onClick={play}
-      />
+      <button className="play-button" onClick={play}>Play</button>
     );
   }
 };

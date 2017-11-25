@@ -12,8 +12,8 @@ class TrackInstruments extends Component {
 
   render() {
     const
-      strokeColor = '#ff6c4f',
-      strokeWidth = '1',
+      strokeColor = '#ec95ac',
+      strokeWidth = '1.5',
       trailColor  = '0';
 
     const {
@@ -29,12 +29,12 @@ class TrackInstruments extends Component {
       percent = _getPercent(deltaTime, track.maxDeltaTime);
 
       return (
-        <li key={index} className='row'>
-          <InstrumentImage
-            instrument={instrument.image}
-          />
-          <div className="instrument-progress col s11">
-            {instrument.id}
+        <li key={index} class="instrument">
+          <section class="instrument-info">
+            <InstrumentImage instrument={instrument.image} />
+            <p className="instrument-name">{instrument.id}</p>
+          </section>
+          <div className="instrument-progress">
             <Line
               percent={percent}
               strokeWidth={strokeWidth}

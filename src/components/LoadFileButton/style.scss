@@ -1,20 +1,31 @@
-.load-file {
+.load-file-wrapper {
+  position: relative;
+  overflow: hidden;
   display: inline-block;
-  margin: 1em;
+  height: 100%;
+}
 
-  .load-file-button {
-    float: none;
-    margin: 0 auto;
-    background-image: url('./svg/plus.svg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    border-radius: 50%;
-    width: 3em;
-    height: 3em;
-    color: white;
-    padding: 0;
-    background-color: transparent;
-    border: .5em solid transparent;
+.load-file-button {
+  background-color: transparent;
+  border-radius: 2px;
+  border: 1px solid white;
+  color: white;
+  font-size: 1em;
+  margin: auto 2px;
+  padding: 1em;
+
+  &:active,
+  &:focus {
+    outline: none;
   }
+}
+
+.load-file-wrapper input[type=file] {
+  font-size: 1em;
+  height: 100%;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
